@@ -20,6 +20,7 @@ public class CityGen : MonoBehaviour
     private List<BuildingLot> buildingLots;
 
     private RoadGen roadGen;
+    private AITrafficController trafficController;
 
 
     private void Start()
@@ -28,6 +29,7 @@ public class CityGen : MonoBehaviour
         buildingLots = new List<BuildingLot>();
 
         roadGen = GetComponent<RoadGen>();
+        trafficController = GetComponentInChildren<AITrafficController>();
 
         GeneratePositions();
 
@@ -75,13 +77,13 @@ public class CityGen : MonoBehaviour
         ClearDividedLots();
 
         roadGen.Initialise(buildingLots, cityWidth, cityLength, tileSize);
+
+        trafficController.Initialise(roadGen.GetRoadNetwork(), roadGen.GetRoadNetworkList(), cityWidth, cityLength);
     }
 
 
     private void ClearDividedLots()
     {
-        //Debug.Log(buildingLots.Count);
-
         for (int i = buildingLots.Count - 1; i >= 0; i--)
         {
             if (buildingLots[i].Divided())
@@ -92,8 +94,6 @@ public class CityGen : MonoBehaviour
 
             buildingLots[i].transform.parent = lotContainer.transform;
         }
-
-        Debug.Log(buildingLots.Count);
     }
 
 

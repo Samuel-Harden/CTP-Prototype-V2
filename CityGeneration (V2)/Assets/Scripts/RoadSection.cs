@@ -4,12 +4,81 @@ using UnityEngine;
 
 public class RoadSection : MonoBehaviour
 {
+    [SerializeField] float nodeSize = 0.1f;
+    [Space]
+    [SerializeField] List<Vector3> aiWaypoints;
+    private List<RoadSection> neighbours;
+
     private int index;
+    private int row;
+    private int col;
 
 
-    public void SetData()
+    public void SetData(int _col, int _row)
     {
+        row = _row;
+        col = _col;
+    }
 
+
+    public void SetWaypoints()
+    {
+        aiWaypoints.Add(new Vector3(transform.position.x - 0.25f, 0.25f, transform.position.z - 0.25f));
+        aiWaypoints.Add(new Vector3(transform.position.x + 0.25f, 0.25f, transform.position.z - 0.25f));
+        aiWaypoints.Add(new Vector3(transform.position.x - 0.25f, 0.25f, transform.position.z + 0.25f));
+        aiWaypoints.Add(new Vector3(transform.position.x + 0.25f, 0.25f, transform.position.z + 0.25f));
+    }
+
+
+    // Pass in vehicle direction,
+    // return next waypoint relavent to facing
+    public List<Vector3> GetWaypoints(string _direction)
+    {
+        List<Vector3> positions = new List<Vector3>();
+
+        // 6 is x axis
+        // 9 is z axis
+        if(index == 6)
+        {
+            if (_direction == "posX")
+            {
+                positions.Add(aiWaypoints[2]);
+                positions.Add(aiWaypoints[3]);
+                return positions;
+            }
+
+            if (_direction == "negX")
+            {
+                positions.Add(aiWaypoints[1]);
+                positions.Add(aiWaypoints[0]);
+                return positions;
+            }
+        }
+
+        if (_direction == "posZ")
+        {
+            positions.Add(aiWaypoints[0]);
+            positions.Add(aiWaypoints[2]);
+            return positions;
+        }
+
+        //if (_direction == "negZ")
+        positions.Add(aiWaypoints[3]);
+        positions.Add(aiWaypoints[1]);
+
+        return positions;
+    }
+
+
+    public void SetNeighbours(List<RoadSection> _neighbours)
+    {
+        neighbours = _neighbours;
+    }
+
+
+    public List<RoadSection> GetNeighbours()
+    {
+        return neighbours;
     }
 
 
@@ -17,4 +86,36 @@ public class RoadSection : MonoBehaviour
     {
         index = _index;
     }
+
+
+    public int Index()
+    {
+        return index;
+    }
+
+
+    public int Row()
+    {
+        return row;
+    }
+
+
+    public int Col()
+    {
+        return col;
+    }
+
+
+    /*private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+
+        if(aiWaypoints.Count != 0)
+        {
+            foreach (Vector3 pos in aiWaypoints)
+            {
+                Gizmos.DrawWireSphere(pos, 0.1f);
+            }
+        }
+    }*/
 }

@@ -13,6 +13,7 @@ public class RoadGen : MonoBehaviour
     private int roadSize;
 
     private RoadSection[,] roadMap;
+    private List<RoadSection> roadMapList;
 
     // Road Section Lookup Table
     Dictionary<int, int> roadMeshs = new Dictionary<int, int>()
@@ -28,7 +29,11 @@ public class RoadGen : MonoBehaviour
         cityWidth  = _cityWidth;
         cityLength = _cityLength;
 
+        roadMapList = new List<RoadSection>();
+
         GenerateRoads(_buildingLots);
+
+        SetNeighbours();
     }
 
 
@@ -72,17 +77,40 @@ public class RoadGen : MonoBehaviour
     }
 
 
-    private RoadSection CreateTile(float _posX, float _posZ)
+    private RoadSection CreateTile(int _posX, int _posZ)
     {
         var tile = Instantiate(roadPrefab, new Vector3(_posX, 0, _posZ),
             Quaternion.identity);
+
+        tile.GetComponent<RoadSection>().SetData(_posX, _posZ);
+
+        roadMapList.Add(tile.GetComponent<RoadSection>());
 
         return tile.GetComponent<RoadSection>();
     }
 
 
+    private void SetNeighbours()
+    {
+        List<RoadSection> neighbours = new List<RoadSection>();
+
+        for (int l = 0; l < cityLength; l++)
+        {
+            for (int w = 0;  w < cityWidth; w++)
+            {
+
+
+
+                neighbours.Clear();
+            }
+        }
+    }
+
+
     private void AssignType(RoadSection _section)
     {
+        List<RoadSection> neighbours = new List<RoadSection>();
+
         Vector3 roadPos = _section.transform.position;
         int index = 0;
 
@@ -92,11 +120,13 @@ public class RoadGen : MonoBehaviour
         bool right = false;
 
 
+
         if (roadPos.z + roadSize <= cityLength)
         {
             //Check Up
             if (roadMap[(int)roadPos.z + roadSize, (int)roadPos.x] != null)
             {
+                neighbours.Add(roadMap[(int)roadPos.z + roadSize, (int)roadPos.x]);
                 up = true;
                 index += 1;
             }
@@ -107,6 +137,7 @@ public class RoadGen : MonoBehaviour
             //Check Down
             if (roadMap[(int)roadPos.z - roadSize, (int)roadPos.x] != null)
             {
+                neighbours.Add(roadMap[(int)roadPos.z - roadSize, (int)roadPos.x]);
                 down = true;
                 index += 8;
             }
@@ -117,6 +148,7 @@ public class RoadGen : MonoBehaviour
             //Check Left
             if (roadMap[(int)roadPos.z, (int)roadPos.x - roadSize] != null)
             {
+                neighbours.Add(roadMap[(int)roadPos.z, (int)roadPos.x - roadSize]);
                 left = true;
                 index += 2;
             }
@@ -127,6 +159,7 @@ public class RoadGen : MonoBehaviour
         //Check Right
         if (roadMap[(int)roadPos.z, (int)roadPos.x + roadSize] != null)
         {
+            neighbours.Add(roadMap[(int)roadPos.z, (int)roadPos.x + roadSize]);
             right = true;
             index += 4;
         }
@@ -134,6 +167,7 @@ public class RoadGen : MonoBehaviour
         _section.SetIndex(index);
 
         _section.GetComponent<MeshFilter>().mesh = roadMeshPrefabs[GetLookupValue(index)];
+
         _section.gameObject.AddComponent<MeshCollider>();
 
         _section.GetComponent<MeshRenderer>().material.color = Color.gray;
@@ -142,13 +176,33 @@ public class RoadGen : MonoBehaviour
         _section.transform.rotation = Quaternion.Euler(-90.0f, 180.0f, 0.0f);
 
         _section.transform.parent = roadContainer.transform;
+
+        _section.SetNeighbours(neighbours);
+
+        
+        if(_section.Index() == 6 || _section.Index() == 9)
+            _section.GetComponent<RoadSection>().SetWaypoints();
+    }
+
+
+    public RoadSection[,] GetRoadNetwork()
+    {
+        return roadMap;
+    }
+
+
+    public List<RoadSection> GetRoadNetworkList()
+    {
+        return roadMapList;
     }
 
 
     private int GetLookupValue(int _value)
     {
         int value = 0;
+
         roadMeshs.TryGetValue(_value, out value);
+
         return value;
     }
 }
