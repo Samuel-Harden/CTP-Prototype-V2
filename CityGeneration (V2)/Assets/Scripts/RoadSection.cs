@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class RoadSection : MonoBehaviour
 {
-    [SerializeField] float nodeSize = 0.1f;
     [Space]
     [SerializeField] List<Vector3> aiWaypoints;
+
+    [Space]
+    [SerializeField] float wayPointOffset = 0.25f;
+
     private List<RoadSection> neighbours;
 
     private int index;
@@ -23,10 +26,21 @@ public class RoadSection : MonoBehaviour
 
     public void SetWaypoints()
     {
-        aiWaypoints.Add(new Vector3(transform.position.x - 0.25f, 0.25f, transform.position.z - 0.25f));
-        aiWaypoints.Add(new Vector3(transform.position.x + 0.25f, 0.25f, transform.position.z - 0.25f));
-        aiWaypoints.Add(new Vector3(transform.position.x - 0.25f, 0.25f, transform.position.z + 0.25f));
-        aiWaypoints.Add(new Vector3(transform.position.x + 0.25f, 0.25f, transform.position.z + 0.25f));
+        if(index == 9)
+        {
+            aiWaypoints.Add(new Vector3(transform.position.x - wayPointOffset, 0.25f, transform.position.z - 0.5f));
+            aiWaypoints.Add(new Vector3(transform.position.x + wayPointOffset, 0.25f, transform.position.z - 0.5f));
+            aiWaypoints.Add(new Vector3(transform.position.x - wayPointOffset, 0.25f, transform.position.z + 0.5f));
+            aiWaypoints.Add(new Vector3(transform.position.x + wayPointOffset, 0.25f, transform.position.z + 0.5f));
+        }
+
+        else
+        {
+            aiWaypoints.Add(new Vector3(transform.position.x - 0.5f, 0.25f, transform.position.z - wayPointOffset));
+            aiWaypoints.Add(new Vector3(transform.position.x + 0.5f, 0.25f, transform.position.z - wayPointOffset));
+            aiWaypoints.Add(new Vector3(transform.position.x - 0.5f, 0.25f, transform.position.z + wayPointOffset));
+            aiWaypoints.Add(new Vector3(transform.position.x + 0.5f, 0.25f, transform.position.z + wayPointOffset));
+        }
     }
 
 

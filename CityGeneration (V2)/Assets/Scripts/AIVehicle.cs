@@ -13,11 +13,21 @@ public class AIVehicle : MonoBehaviour
     private int vehicleID;
     private bool hasWaypoint;
     private bool initialised;
+    private bool moving;
 
     private List<Vector3> waypoints;
 
+    [SerializeField] LayerMask vehicleMask;
+
     [SerializeField] Color waypointColor = Color.magenta;
     [SerializeField] float updateDistance = 0.75f;
+
+    [SerializeField] float maxSteerAngle = 40.0f;
+    [SerializeField] float maxPower = 15.0f;
+    [SerializeField] float breakPower = 0.1f;
+
+    [SerializeField] WheelCollider wheelFL;
+    [SerializeField] WheelCollider wheelFR;
 
     private Rigidbody rb;
 
@@ -34,59 +44,8 @@ public class AIVehicle : MonoBehaviour
         hasWaypoint = false;
 
         initialised = true;
-    }
 
-    // Update is called once per frame
-    void Update ()
-    {
-        if(initialised)
-        {
-            if (hasWaypoint)
-            {
-                //rb.AddForce(transform.forward * 0.5f);
-                // if distance is less than x
-                // hasWaypoint = false;
-
-                float step = speed * Time.deltaTime;
-
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(waypoints[0].x, transform.position.y, waypoints[0].z), step);
-
-            if(Vector3.Distance(transform.position, waypoints[0]) < updateDistance)
-                {
-                    waypoints.RemoveAt(0);
-
-                    if(waypoints.Count == 0)
-                        hasWaypoint = false;
-                }
-            }
-
-            if (!hasWaypoint)
-            {
-                GetNewWaypoints();
-
-                hasWaypoint = true;
-            }
-        }
-    }
-
-
-    /*private void FixedUpdate()
-    {
-        {
-            if(hasWaypoint)
-            {
-                Vector3 direction = new Vector3(waypoint.x, transform.position.y, waypoint.z) - transform.position;
-                Quaternion toRotation = Quaternion.FromToRotation(transform.forward, direction);
-
-                transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, 0.5f * Time.time);
-            }
-        }
-    }*/
-
-
-    private void GetNewWaypoints()
-    {
-        waypoints = controller.GetWaypoint(row, col, direction, vehicleID);
+        moving = true;
     }
 
 
@@ -102,6 +61,108 @@ public class AIVehicle : MonoBehaviour
         direction = _direction;
         row = _row;
         col = _col;
+    }
+
+
+    public void SetMoving(bool _moving)
+    {
+        moving = _moving;
+    }
+
+    // Update is called once per frame
+    void Update ()
+    {
+
+    }
+
+
+    private void FixedUpdate()
+    {
+        if (initialised)
+        {
+            if (hasWaypoint)
+            {
+                if (moving)
+                {
+                    ApplySteer();
+
+                    ApplyForce();
+
+                    CheckWaypointDistance();
+                }
+            }
+
+            if (!hasWaypoint)
+            {
+                GetNewWaypoints();
+
+                hasWaypoint = true;
+            }
+        }
+    }
+
+
+    private void CheckWaypointDistance()
+    {
+        if (Vector3.Distance(transform.position, waypoints[0]) < updateDistance)
+        {
+            waypoints.RemoveAt(0);
+
+            if (waypoints.Count == 0)
+                hasWaypoint = false;
+        }
+    }
+
+
+    private void ApplySteer()
+    {
+        Vector3 relativeVector = transform.InverseTransformPoint(waypoints[0]);
+
+        float newSteer = (relativeVector.x / relativeVector.magnitude) * maxSteerAngle;
+
+        wheelFL.steerAngle = newSteer;
+        wheelFR.steerAngle = newSteer;
+    }
+
+
+    private void ApplyForce()
+    {
+        wheelFL.motorTorque = maxPower;
+        wheelFR.motorTorque = maxPower;
+    }
+
+
+    private void ApplyBrake()
+    {
+        wheelFL.brakeTorque = breakPower;
+        wheelFR.brakeTorque = breakPower;
+    }
+
+
+    private void ReleaseBrake()
+    {
+        wheelFL.brakeTorque = 0.0f;
+        wheelFR.brakeTorque = 0.0f;
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        ApplyBrake();
+        moving = false;
+    }
+
+
+    private void OnTriggerExit(Collider other)
+    {
+        ReleaseBrake();
+        moving = true;
+    }
+
+
+    private void GetNewWaypoints()
+    {
+        waypoints = controller.GetWaypoint(row, col, direction, vehicleID);
     }
 
 

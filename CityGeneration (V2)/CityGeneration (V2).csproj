@@ -78,6 +78,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\CarEngine.cs" />
     <Compile Include="Assets\Scripts\AITrafficController.cs" />
     <Compile Include="Assets\Scripts\AIVehicle.cs" />
     <Compile Include="Assets\Scripts\AIWaypoints.cs" />
