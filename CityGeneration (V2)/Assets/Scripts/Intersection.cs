@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Intersection : MonoBehaviour
 {
-    [SerializeField] float delayTime = 2;
-    [SerializeField] float sectionTime = 5;
+    [SerializeField] float delayTime = 2.0f;
+    [SerializeField] float sectionTime = 8.0f;
 
     private RoadSection roadSection;
 
@@ -78,9 +78,7 @@ public class Intersection : MonoBehaviour
 
     private void DisableCurrentTrafficZone()
     {
-        //trafficZones[currentSection].GetComponent<BoxCollider>().enabled = false;
-
-        trafficZones[currentSection].transform.position = new Vector3(trafficZones[currentSection].transform.position.x, 2.0f, trafficZones[currentSection].transform.position.z);
+        trafficZones[currentSection].transform.position = new Vector3(trafficZones[currentSection].transform.position.x, 3.0f, trafficZones[currentSection].transform.position.z);
 
         currentGreen = trafficZones[currentSection].transform.position;
 
@@ -95,8 +93,6 @@ public class Intersection : MonoBehaviour
     {
         foreach(GameObject trafficZone in trafficZones)
         {
-            //trafficZones[currentSection].GetComponent<BoxCollider>().enabled = true;
-
             trafficZone.transform.position = new Vector3(trafficZone.transform.position.x, 0.2f, trafficZone.transform.position.z);
         }
     }
@@ -110,14 +106,14 @@ public class Intersection : MonoBehaviour
             // Check if connection is above or below this junction
             if(junction.Row() > roadSection.Row())
             {
-                Vector3 pos = new Vector3(transform.position.x + 0.25f, 0.2f, transform.position.z + 0.4f);
+                Vector3 pos = new Vector3(transform.position.x + 0.2f, 0.2f, transform.position.z + 0.4f);
 
                 GenerateTrafficZone(pos);
             }
 
             if(junction.Row() < roadSection.Row())
             {
-                Vector3 pos = new Vector3(transform.position.x - 0.25f, 0.2f, transform.position.z - 0.4f);
+                Vector3 pos = new Vector3(transform.position.x - 0.2f, 0.2f, transform.position.z - 0.4f);
 
                 GenerateTrafficZone(pos);
             }
@@ -125,14 +121,14 @@ public class Intersection : MonoBehaviour
             // Check if connection is to the left or right of this junction
             if (junction.Col() > roadSection.Col())
             {
-                Vector3 pos = new Vector3(transform.position.x + 0.4f, 0.2f, transform.position.z - 0.25f);
+                Vector3 pos = new Vector3(transform.position.x + 0.4f, 0.2f, transform.position.z - 0.2f);
 
                 GenerateTrafficZone(pos);
             }
 
             if(junction.Col() < roadSection.Col())
             {
-                Vector3 pos = new Vector3(transform.position.x - 0.4f, 0.2f, transform.position.z + 0.25f);
+                Vector3 pos = new Vector3(transform.position.x - 0.4f, 0.2f, transform.position.z + 0.2f);
 
                 GenerateTrafficZone(pos);
             }
@@ -153,9 +149,10 @@ public class Intersection : MonoBehaviour
         trafficZone.AddComponent<BoxCollider>();
 
         trafficZone.GetComponent<BoxCollider>().isTrigger = true;
+
         trafficZone.GetComponent<BoxCollider>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
-        trafficZone.layer = LayerMask.NameToLayer("Vehicle");
+        trafficZone.layer = LayerMask.NameToLayer("TrafficSignal");
 ;
         trafficZones.Add(trafficZone);
 
@@ -171,7 +168,7 @@ public class Intersection : MonoBehaviour
         {
             if(!onDelay)
             {
-                Gizmos.DrawWireSphere(currentGreen, 0.15f);
+                Gizmos.DrawWireSphere(new Vector3(currentGreen.x, 0.1f, currentGreen.z), 0.15f);
             }
         }
     }

@@ -23,7 +23,7 @@ MonoBehaviour:
   m_MinSize: {x: 917, y: 442}
   m_MaxSize: {x: 22012, y: 10021}
   vertical: 0
-  controlID: 18243
+  controlID: 14626
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -47,18 +47,18 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 88
-    y: 92
+    y: 100
     width: 1115
     height: 741
   m_SceneLighting: 1
-  lastFramingTime: 10717.011734406837
+  lastFramingTime: 5997.467212161299
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 11.845419, y: -0.453125, z: 12.270667}
+    m_Target: {x: 10.928875, y: 9.128906, z: 10.016421}
     speed: 2
-    m_Value: {x: 11.845419, y: -0.453125, z: 12.270667}
+    m_Value: {x: 10.928875, y: 9.128906, z: 10.016421}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -81,13 +81,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+    m_Target: {x: -0.7071068, y: 0, z: -0, w: -0.7071068}
     speed: 2
-    m_Value: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+    m_Value: {x: -0.7071068, y: 0, z: 0, w: -0.7071068}
   m_Size:
-    m_Target: 23.991617
+    m_Target: 20.560274
     speed: 2
-    m_Value: 23.991617
+    m_Value: 20.560274
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_MinSize: {x: 640, y: 442}
   m_MaxSize: {x: 18010, y: 10021}
   vertical: 0
-  controlID: 18244
+  controlID: 14627
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 202, y: 442}
   m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 18245
+  controlID: 14628
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -165,8 +165,8 @@ MonoBehaviour:
     y: 0
     width: 1117
     height: 762
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 2}
   m_Panes:
   - {fileID: 2}
@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 88
-    y: 854
+    y: 862
     width: 1115
     height: 204
   m_MaximizeOnPlay: 0
@@ -321,28 +321,28 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 1207
-    y: 92
+    y: 100
     width: 200
     height: 966
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: c26ed3ffcc6ed3ffa469d4ffae69d4ff64bfd4ff6ebfd4ff2e0bd5ff380bd5ffa2b8d5ffacb8d5ff1098d6ff1a98d6ffe89cd6fff29cd6ff649dd6ff6e9dd6ff4294d9ff4c94d9ff2644daffb249daff0cffe4ff16ffe4ffb62ce8ffacaae9ff1e20ebff2a20ecffc845f4ffd245f4ffdc12fbff3213fbff3c13fbff82bafeff8cbafeffa8fbffffacfbffffb0fbffffb6fbffffe0fbffffe2fbffffe6fbffff00000000c8250000d0250000
+    m_ExpandedIDs: f6d5edff00d6edfffa57eeff0458eeff9e24f0ffa824f0ff88f8f0ff92f8f0ff22f2f3ff2cf2f3ff9427f5ff9e27f5ff124bf6ff1c4bf6ffd298f8ffdc98f8ff601af9ff9691faffa091faff78ecfaff82ecfaff400ffcff4a0ffcff8c15fcff9615fcff7418fcff62b3fcff6cb3fcffd6b4fcff1e31fdff2831fdff7236fdff7c36fdff8a93fdff9493fdffbce7fdffc6e7fdffc882feffd282feff78f4feff82f4feffd634ffffe234ffffe2fbffffe6fbffff00000000ca250000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Meshs
-      m_OriginalName: Meshs
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: -1054
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 8}
     m_SearchString: 
@@ -399,7 +399,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 1411
-    y: 92
+    y: 100
     width: 230
     height: 966
   m_SearchFilter:
@@ -413,19 +413,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scripts
+    - Assets/Prefabs
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Prefabs
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Documents\GitHub\CTP-Prototype-V2\CityGeneration (V2)
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 42250000
-    m_LastClickedID: 9538
-    m_ExpandedIDs: 00000000b6240000e024000046250000ffffff7f
+    m_SelectedIDs: 48250000
+    m_LastClickedID: 9544
+    m_ExpandedIDs: 00000000b8240000e224000048250000ffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -453,7 +453,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000b6240000e024000046250000ffffff7f
+    m_ExpandedIDs: 00000000b8240000e224000048250000ffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -480,7 +480,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: 000000000e3f00007c400000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -556,7 +556,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 1645
-    y: 92
+    y: 100
     width: 275
     height: 966
   m_ScrollPosition: {x: 0, y: 0}

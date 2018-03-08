@@ -15,25 +15,24 @@ public class AIVehicle : MonoBehaviour
     private bool initialised;
     private bool moving;
 
+    private float idleTimer;
+    private float idleTime = 30.0f;
+
     private List<Vector3> waypoints;
 
-    [SerializeField] LayerMask vehicleMask;
-
-    [SerializeField] Color waypointColor = Color.magenta;
+    //[SerializeField] Color waypointColor = Color.magenta;
     [SerializeField] float updateDistance = 1.75f;
 
     [SerializeField] float maxSteerAngle = 40.0f;
     [SerializeField] float maxPower = 10.0f;
-    [SerializeField] float maxSpeed = 8.0f;
     [SerializeField] float breakPower = 0.1f;
 
     [SerializeField] WheelCollider wheelFL;
     [SerializeField] WheelCollider wheelFR;
 
-    private BoxCollider coll;
-    private Vector3 collBasePos;
+    [SerializeField] Transform viewStart;
 
-    float speed = 1.0f;
+    private Vector3 sensorPos;
 
     public void Initialise(AITrafficController _controller, int _carID)
     {
@@ -74,10 +73,10 @@ public class AIVehicle : MonoBehaviour
         moving = _moving;
     }
 
-    // Update is called once per frame
-    void Update ()
-    {
 
+    private void Update()
+    {
+        Sensors();
     }
 
 
@@ -85,6 +84,8 @@ public class AIVehicle : MonoBehaviour
     {
         if (initialised)
         {
+            //Sensors();
+
             if (hasWaypoint)
             {
                 if (moving)
@@ -95,6 +96,16 @@ public class AIVehicle : MonoBehaviour
 
                     CheckWaypointDistance();
                 }
+
+                /*if (!moving )
+                    idleTimer += Time.deltaTime;
+
+                if (idleTimer > idleTime)
+                {
+                    ReleaseBrake();
+                    moving = true;
+                    idleTime = 0.0f;
+                }*/
             }
 
             if (!hasWaypoint)
@@ -151,11 +162,39 @@ public class AIVehicle : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
+    private void Sensors()
     {
-        Debug.Log(other.name);
+        sensorPos = transform.position;
+        sensorPos.z += 0.3f;
+        sensorPos.y += 0.1f;
+
+        RaycastHit hit;
+
+        if(Physics.Raycast(viewStart.position, transform.forward, out hit, 0.15f))
+        {
+            ApplyBrake();
+            moving = false;
+        }
+
+        else
+        {
+            ReleaseBrake();
+            moving = true;
+        }
+
+        if (hit.point != Vector3.zero)
+            Debug.DrawLine(viewStart.position, hit.point);
+    }
+
+
+    /*private void OnTriggerEnter(Collider other)
+    {
+        stopedObject = other.gameObject;
         ApplyBrake();
         moving = false;
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("TrafficSignal"))
+            atSignal = true;
     }
 
 
@@ -163,7 +202,11 @@ public class AIVehicle : MonoBehaviour
     {
         ReleaseBrake();
         moving = true;
-    }
+        idleTimer = 0.0f;
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("TrafficSignal"))
+            atSignal = false;
+    }*/
 
 
     private void GetNewWaypoints()
@@ -172,12 +215,12 @@ public class AIVehicle : MonoBehaviour
     }
 
 
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
         if(hasWaypoint)
         {
             Gizmos.color = waypointColor;
             Gizmos.DrawWireCube(waypoints[0], new Vector3(0.2f, 0.2f, 0.2f));
         }
-    }
+    }*/
 }

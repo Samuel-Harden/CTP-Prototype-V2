@@ -8,7 +8,7 @@ public class RoadSection : MonoBehaviour
     [SerializeField] List<Vector3> aiWaypoints;
 
     [Space]
-    [SerializeField] float wayPointOffset = 0.25f;
+    [SerializeField] float wayPointOffset = 0.3f;
 
     private List<RoadSection> neighbours;
 
