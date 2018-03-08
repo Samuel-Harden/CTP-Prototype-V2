@@ -78,7 +78,8 @@ public class CityGen : MonoBehaviour
 
         roadGen.Initialise(buildingLots, cityWidth, cityLength, tileSize);
 
-        trafficController.Initialise(roadGen.GetRoadNetwork(), roadGen.GetRoadNetworkList(), cityWidth, cityLength);
+        trafficController.Initialise(roadGen.GetRoadNetwork(),
+            roadGen.GetRoadNetworkList(), cityWidth, cityLength);
     }
 
 

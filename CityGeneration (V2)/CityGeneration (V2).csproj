@@ -85,8 +85,10 @@
     <Compile Include="Assets\Scripts\BuildingLot.cs" />
     <Compile Include="Assets\Scripts\BuildingLotData.cs" />
     <Compile Include="Assets\Scripts\CityGen.cs" />
+    <Compile Include="Assets\Scripts\Intersection.cs" />
     <Compile Include="Assets\Scripts\RoadGen.cs" />
     <Compile Include="Assets\Scripts\RoadSection.cs" />
+    <Compile Include="Assets\Scripts\VehicleWheels.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

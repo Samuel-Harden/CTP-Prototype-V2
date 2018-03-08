@@ -16,7 +16,8 @@ public class AITrafficController : MonoBehaviour
     private int cityWidth;
     private int cityLength;
 
-	public void Initialise(RoadSection[,] _roadNetwork, List<RoadSection> _roadNetworkList, int _cityWidth, int _cityLength)
+	public void Initialise(RoadSection[,] _roadNetwork, List<RoadSection> _roadNetworkList,
+        int _cityWidth, int _cityLength)
     {
         vehicles = new List<AIVehicle>();
 
@@ -37,7 +38,8 @@ public class AITrafficController : MonoBehaviour
     {
         for (int i = 0; i < noVehicles; i++)
         {
-            var vehicle = Instantiate(vehiclePrefabs[Random.Range(0, vehiclePrefabs.Count)], Vector3.zero, Quaternion.identity);
+            var vehicle = Instantiate(vehiclePrefabs[Random.Range(0, vehiclePrefabs.Count)],
+                Vector3.zero, Quaternion.identity);
 
             vehicle.GetComponent<AIVehicle>().Initialise(this, i);
 
@@ -50,8 +52,10 @@ public class AITrafficController : MonoBehaviour
 
     private void SetupPositions()
     {
-        // Can use indexs to identify what road section we are on, Ideally only use a specific tile type to spawn at the start, ie Index 9 (Spawn them facing up)
-        // So we know we want a waypoint with a -x value (left side), and we know the facing off all vehicles! :)
+        // Can use indexs to identify what road section we are on,
+        // Ideally only use a specific tile type to spawn at the start,
+        //ie Index 9 (Spawn them facing up). So we know we want a waypoint
+        // with a -x value (left side), and we know the facing off all vehicles! :)
 
         List<RoadSection> index9Sections = new List<RoadSection>();
         
@@ -75,6 +79,11 @@ public class AITrafficController : MonoBehaviour
             vehicle.transform.position = new Vector3(positions[0].x, 0.25f, positions[0].z);
 
             vehicle.SetCurrentSection(index9Sections[i].Row(), index9Sections[i].Col());
+
+            vehicle.SetWaypoints(positions);
+
+            //Stops the same section being used, (and spawning another vehicle on this one)
+            index9Sections.RemoveAt(i);
         }
     }
 
@@ -110,6 +119,7 @@ public class AITrafficController : MonoBehaviour
                 return newWaypoints;
         }
     }
+
 
     // Current ie(where the vehicle currently is)
     // row & col are where we need to check

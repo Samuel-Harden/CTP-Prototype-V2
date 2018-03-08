@@ -20,16 +20,18 @@ public class AIVehicle : MonoBehaviour
     [SerializeField] LayerMask vehicleMask;
 
     [SerializeField] Color waypointColor = Color.magenta;
-    [SerializeField] float updateDistance = 0.75f;
+    [SerializeField] float updateDistance = 1.75f;
 
     [SerializeField] float maxSteerAngle = 40.0f;
-    [SerializeField] float maxPower = 15.0f;
+    [SerializeField] float maxPower = 10.0f;
+    [SerializeField] float maxSpeed = 8.0f;
     [SerializeField] float breakPower = 0.1f;
 
     [SerializeField] WheelCollider wheelFL;
     [SerializeField] WheelCollider wheelFR;
 
-    private Rigidbody rb;
+    private BoxCollider coll;
+    private Vector3 collBasePos;
 
     float speed = 1.0f;
 
@@ -39,13 +41,7 @@ public class AIVehicle : MonoBehaviour
         controller = _controller;
         vehicleID = _carID;
 
-        rb = GetComponent<Rigidbody>();
-
-        hasWaypoint = false;
-
         initialised = true;
-
-        moving = true;
     }
 
 
@@ -53,6 +49,15 @@ public class AIVehicle : MonoBehaviour
     {
         row = _row;
         col = _col;
+    }
+
+
+    public void SetWaypoints(List<Vector3> _waypoints)
+    {
+        waypoints = _waypoints;
+
+        hasWaypoint = true;
+        moving = true;
     }
 
 
@@ -148,6 +153,7 @@ public class AIVehicle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.name);
         ApplyBrake();
         moving = false;
     }

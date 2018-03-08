@@ -98,9 +98,6 @@ public class RoadGen : MonoBehaviour
         {
             for (int w = 0;  w < cityWidth; w++)
             {
-
-
-
                 neighbours.Clear();
             }
         }
@@ -179,9 +176,16 @@ public class RoadGen : MonoBehaviour
 
         _section.SetNeighbours(neighbours);
 
-        
-        if(_section.Index() == 6 || _section.Index() == 9)
+
+        if (_section.Index() == 6 || _section.Index() == 9)
             _section.GetComponent<RoadSection>().SetWaypoints();
+
+        else
+        {
+            _section.gameObject.AddComponent<Intersection>();
+            _section.GetComponent<Intersection>().Initialise();
+        }
+
     }
 
 
