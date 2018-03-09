@@ -180,7 +180,7 @@ public class RoadGen : MonoBehaviour
         if (_section.Index() == 6 || _section.Index() == 9)
             _section.GetComponent<RoadSection>().SetWaypoints();
 
-        else
+        else if (_section.GetNeighbours().Count > 2)
         {
             _section.gameObject.AddComponent<Intersection>();
             _section.GetComponent<Intersection>().Initialise();

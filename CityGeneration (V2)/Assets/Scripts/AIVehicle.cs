@@ -4,6 +4,23 @@ using UnityEngine;
 
 public class AIVehicle : MonoBehaviour
 {
+    //[SerializeField] Color waypointColor = Color.magenta;
+    [SerializeField] float updateDistance = 1.75f;
+
+    [Space]
+    [SerializeField] float maxSteerAngle = 40.0f;
+    [SerializeField] float maxPower = 10.0f;
+
+    [Space]
+    [SerializeField] WheelCollider wheelFL;
+    [SerializeField] WheelCollider wheelFR;
+
+    [Space]
+    [Header("Vehicle Sensors")]
+    [SerializeField] Transform sensorLeft;
+    [SerializeField] Transform sensorRight;
+    [SerializeField] Transform sensorCenter;
+
     private AITrafficController controller;
 
     private string direction;
@@ -11,34 +28,29 @@ public class AIVehicle : MonoBehaviour
     private int row;
     private int col;
     private int vehicleID;
+
     private bool hasWaypoint;
     private bool initialised;
     private bool moving;
 
     private float idleTimer;
-    private float idleTime = 30.0f;
+    private float idleTime   = 30.0f;
+    private float breakPower =  0.1f;
 
     private List<Vector3> waypoints;
 
-    //[SerializeField] Color waypointColor = Color.magenta;
-    [SerializeField] float updateDistance = 1.75f;
+    private Transform currentSensor;
 
-    [SerializeField] float maxSteerAngle = 40.0f;
-    [SerializeField] float maxPower = 10.0f;
-    [SerializeField] float breakPower = 0.1f;
-
-    [SerializeField] WheelCollider wheelFL;
-    [SerializeField] WheelCollider wheelFR;
-
-    [SerializeField] Transform viewStart;
-
-    private Vector3 sensorPos;
 
     public void Initialise(AITrafficController _controller, int _carID)
     {
         direction = "posZ";
+
         controller = _controller;
+
         vehicleID = _carID;
+
+        currentSensor = sensorCenter;
 
         initialised = true;
     }
@@ -74,17 +86,13 @@ public class AIVehicle : MonoBehaviour
     }
 
 
-    private void Update()
-    {
-        Sensors();
-    }
-
-
     private void FixedUpdate()
     {
         if (initialised)
         {
-            //Sensors();
+            SetCurrentSensor();
+
+            Sensors();
 
             if (hasWaypoint)
             {
@@ -96,16 +104,6 @@ public class AIVehicle : MonoBehaviour
 
                     CheckWaypointDistance();
                 }
-
-                /*if (!moving )
-                    idleTimer += Time.deltaTime;
-
-                if (idleTimer > idleTime)
-                {
-                    ReleaseBrake();
-                    moving = true;
-                    idleTime = 0.0f;
-                }*/
             }
 
             if (!hasWaypoint)
@@ -162,15 +160,35 @@ public class AIVehicle : MonoBehaviour
     }
 
 
+    private void SetCurrentSensor()
+    {
+        float steer = wheelFL.steerAngle;
+
+        if (steer < -6.0f)
+            currentSensor = sensorLeft;
+
+        else if (steer > 6.0f)
+            currentSensor = sensorRight;
+
+        else
+        {
+            if (currentSensor != sensorCenter)
+            currentSensor = sensorCenter;
+        }
+    }
+
+
     private void Sensors()
     {
-        sensorPos = transform.position;
-        sensorPos.z += 0.3f;
-        sensorPos.y += 0.1f;
-
         RaycastHit hit;
 
-        if(Physics.Raycast(viewStart.position, transform.forward, out hit, 0.15f))
+        Quaternion rot = Quaternion.Euler(0.0f, wheelFL.steerAngle, 0.0f);
+
+        Vector3 direction = rot * (wheelFL.transform.forward / 5);
+
+        //Debug.DrawLine(currentSensor.position, currentSensor.position + direction);
+
+        if (Physics.Raycast(currentSensor.position, direction, out hit, 0.2f))
         {
             ApplyBrake();
             moving = false;
@@ -181,32 +199,7 @@ public class AIVehicle : MonoBehaviour
             ReleaseBrake();
             moving = true;
         }
-
-        if (hit.point != Vector3.zero)
-            Debug.DrawLine(viewStart.position, hit.point);
     }
-
-
-    /*private void OnTriggerEnter(Collider other)
-    {
-        stopedObject = other.gameObject;
-        ApplyBrake();
-        moving = false;
-
-        if (other.gameObject.layer == LayerMask.NameToLayer("TrafficSignal"))
-            atSignal = true;
-    }
-
-
-    private void OnTriggerExit(Collider other)
-    {
-        ReleaseBrake();
-        moving = true;
-        idleTimer = 0.0f;
-
-        if (other.gameObject.layer == LayerMask.NameToLayer("TrafficSignal"))
-            atSignal = false;
-    }*/
 
 
     private void GetNewWaypoints()
@@ -217,10 +210,17 @@ public class AIVehicle : MonoBehaviour
 
     /*private void OnDrawGizmos()
     {
-        if(hasWaypoint)
+        Gizmos.color = Color.red;
+
+        Quaternion rot = Quaternion.Euler(0.0f, wheelFL.steerAngle, 0.0f);
+
+        Vector3 direction = rot * (wheelFL.transform.forward / 4);
+
+        if (currentSensor != null)
         {
-            Gizmos.color = waypointColor;
-            Gizmos.DrawWireCube(waypoints[0], new Vector3(0.2f, 0.2f, 0.2f));
+            Gizmos.DrawWireCube(currentSensor.position + direction, new Vector3(0.1f, 0.1f, 0.1f));
+
+            Gizmos.DrawWireSphere(currentSensor.position, 0.05f);
         }
     }*/
 }

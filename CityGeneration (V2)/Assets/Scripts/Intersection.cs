@@ -5,7 +5,7 @@ using UnityEngine;
 public class Intersection : MonoBehaviour
 {
     [SerializeField] float delayTime = 2.0f;
-    [SerializeField] float sectionTime = 8.0f;
+    [SerializeField] float sectionTime = 8.5f;
 
     private RoadSection roadSection;
 
@@ -93,7 +93,7 @@ public class Intersection : MonoBehaviour
     {
         foreach(GameObject trafficZone in trafficZones)
         {
-            trafficZone.transform.position = new Vector3(trafficZone.transform.position.x, 0.2f, trafficZone.transform.position.z);
+            trafficZone.transform.position = new Vector3(trafficZone.transform.position.x, 0.1f, trafficZone.transform.position.z);
         }
     }
 
@@ -106,14 +106,14 @@ public class Intersection : MonoBehaviour
             // Check if connection is above or below this junction
             if(junction.Row() > roadSection.Row())
             {
-                Vector3 pos = new Vector3(transform.position.x + 0.2f, 0.2f, transform.position.z + 0.4f);
+                Vector3 pos = new Vector3(transform.position.x + 0.2f, 0.1f, transform.position.z + 0.4f);
 
                 GenerateTrafficZone(pos);
             }
 
             if(junction.Row() < roadSection.Row())
             {
-                Vector3 pos = new Vector3(transform.position.x - 0.2f, 0.2f, transform.position.z - 0.4f);
+                Vector3 pos = new Vector3(transform.position.x - 0.2f, 0.1f, transform.position.z - 0.4f);
 
                 GenerateTrafficZone(pos);
             }
@@ -121,14 +121,14 @@ public class Intersection : MonoBehaviour
             // Check if connection is to the left or right of this junction
             if (junction.Col() > roadSection.Col())
             {
-                Vector3 pos = new Vector3(transform.position.x + 0.4f, 0.2f, transform.position.z - 0.2f);
+                Vector3 pos = new Vector3(transform.position.x + 0.4f, 0.1f, transform.position.z - 0.2f);
 
                 GenerateTrafficZone(pos);
             }
 
             if(junction.Col() < roadSection.Col())
             {
-                Vector3 pos = new Vector3(transform.position.x - 0.4f, 0.2f, transform.position.z + 0.2f);
+                Vector3 pos = new Vector3(transform.position.x - 0.4f, 0.1f, transform.position.z + 0.2f);
 
                 GenerateTrafficZone(pos);
             }
@@ -150,7 +150,7 @@ public class Intersection : MonoBehaviour
 
         trafficZone.GetComponent<BoxCollider>().isTrigger = true;
 
-        trafficZone.GetComponent<BoxCollider>().transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        trafficZone.GetComponent<BoxCollider>().transform.localScale = new Vector3(0.1f, 0.2f, 0.1f);
 
         trafficZone.layer = LayerMask.NameToLayer("TrafficSignal");
 ;

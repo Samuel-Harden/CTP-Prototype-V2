@@ -7,6 +7,8 @@ public class AITrafficController : MonoBehaviour
     [SerializeField] List<GameObject> vehiclePrefabs;
     [SerializeField] int noVehicles;
 
+    [SerializeField] Transform vehicleContainer;
+
     private RoadSection[,] roadNetwork;
     private List<RoadSection> roadNetworkList;
 
@@ -44,6 +46,8 @@ public class AITrafficController : MonoBehaviour
             vehicle.GetComponent<AIVehicle>().Initialise(this, i);
 
             vehicles.Add(vehicle.GetComponent<AIVehicle>());
+
+            vehicle.transform.parent = vehicleContainer.transform;
         }
 
         SetupPositions();
