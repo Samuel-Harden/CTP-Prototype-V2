@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 5b18eae3d5c080542bb754c7e4d8f86a
-timeCreated: 1520436083
+guid: efda713a7ca1a3240b1a20be26344cf2
+timeCreated: 1520796252
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -58,15 +58,15 @@ ModelImporter:
     4300000: Base
     4300002: Index 15
     4300004: Index 5
-    4300006: Index 3
-    4300008: index 12
-    4300010: Index 10
-    4300012: Index 9
-    4300014: Index 6
-    4300016: Index 11
-    4300018: Index 13
-    4300020: Index 7
-    4300022: Index 14
+    4300006: index 12
+    4300008: Index 10
+    4300010: Index 9
+    4300012: Index 6
+    4300014: Index 11
+    4300016: Index 13
+    4300018: Index 7
+    4300020: Index 14
+    4300022: Index 3
   materials:
     importMaterials: 1
     materialName: 0

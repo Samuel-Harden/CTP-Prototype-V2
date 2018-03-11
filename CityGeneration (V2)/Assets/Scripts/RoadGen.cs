@@ -5,6 +5,7 @@ using UnityEngine;
 public class RoadGen : MonoBehaviour
 {
     [SerializeField] List<Mesh> roadMeshPrefabs;
+    [SerializeField] List<Material> roadMaterials;
     [Space] [SerializeField] GameObject roadPrefab;
     [Space] [SerializeField] GameObject roadContainer;
 
@@ -15,11 +16,17 @@ public class RoadGen : MonoBehaviour
     private RoadSection[,] roadMap;
     private List<RoadSection> roadMapList;
 
-    // Road Section Lookup Table
+    // Road Section Lookup Tables for Mesh and Texture
     Dictionary<int, int> roadMeshs = new Dictionary<int, int>()
     {
         {  3, 0 }, {  5, 1 }, { 6,  2 }, {  7, 3 }, { 9,   4 }, { 10, 5 },
         { 11, 6 }, { 12, 7 }, { 13, 8 }, { 14, 9 }, { 15, 10 }
+    };
+
+    Dictionary<string, int> roadMaterial = new Dictionary<string, int>()
+    {
+        {  "Index_3", 0 }, {  "Index_5", 1 }, { "Index_6",  2 }, {  "Index_7", 3 }, { "Index_9",   4 }, { "Index_10", 5 },
+        { "Index_11", 6 }, { "Index_12", 7 }, { "Index_13", 8 }, { "Index_14", 9 }, { "Index_15", 10 }
     };
 
     public void Initialise(List<BuildingLot> _buildingLots, int _cityWidth,
@@ -165,9 +172,24 @@ public class RoadGen : MonoBehaviour
 
         _section.GetComponent<MeshFilter>().mesh = roadMeshPrefabs[GetLookupValue(index)];
 
-        _section.gameObject.AddComponent<MeshCollider>();
+        Material[] _sectionMats = new Material[2];
 
-        _section.GetComponent<MeshRenderer>().material.color = Color.gray;
+        // 3DS Max flips the Mats after Index_7? so a quick fix
+        if (index <= 7)
+        {
+            _sectionMats[0] = roadMaterials[0];
+            _sectionMats[1] = roadMaterials[1];
+        }
+
+        else
+        {
+            _sectionMats[0] = roadMaterials[1];
+            _sectionMats[1] = roadMaterials[0];
+        }
+
+        _section.GetComponent<Renderer>().sharedMaterials = _sectionMats;
+
+        _section.gameObject.AddComponent<MeshCollider>();
 
         // Compensate for 3Ds Max's Rotations
         _section.transform.rotation = Quaternion.Euler(-90.0f, 180.0f, 0.0f);
