@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class AIVehicle : MonoBehaviour
 {
-    //[SerializeField] Color waypointColor = Color.magenta;
     [SerializeField] float updateDistance = 1.75f;
 
     [Space]
     [SerializeField] float maxSteerAngle = 40.0f;
-    [SerializeField] float maxPower = 10.0f;
+    [SerializeField] float maxPower      = 10.0f;
 
     [Space]
     [SerializeField] WheelCollider wheelFL;
@@ -20,6 +19,9 @@ public class AIVehicle : MonoBehaviour
     [SerializeField] Transform sensorLeft;
     [SerializeField] Transform sensorRight;
     [SerializeField] Transform sensorCenter;
+
+    [Space]
+    [SerializeField] MeshRenderer vehicleBody;
 
     private AITrafficController controller;
 
@@ -33,9 +35,9 @@ public class AIVehicle : MonoBehaviour
     private bool initialised;
     private bool moving;
 
-    private float idleTimer;
-    private float idleTime   = 30.0f;
-    private float breakPower =  0.1f;
+    private float breakPower        = 0.1f;
+    private float sensorAngleSwitch = 6.0f;
+    private float aiSightDistance   = 0.2f;
 
     private List<Vector3> waypoints;
 
@@ -53,6 +55,8 @@ public class AIVehicle : MonoBehaviour
         currentSensor = sensorCenter;
 
         initialised = true;
+
+        vehicleBody.material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
     }
 
 
@@ -164,10 +168,10 @@ public class AIVehicle : MonoBehaviour
     {
         float steer = wheelFL.steerAngle;
 
-        if (steer < -6.0f)
+        if (steer < -sensorAngleSwitch)
             currentSensor = sensorLeft;
 
-        else if (steer > 6.0f)
+        else if (steer > sensorAngleSwitch)
             currentSensor = sensorRight;
 
         else
@@ -184,11 +188,11 @@ public class AIVehicle : MonoBehaviour
 
         Quaternion rot = Quaternion.Euler(0.0f, wheelFL.steerAngle, 0.0f);
 
-        Vector3 direction = rot * (wheelFL.transform.forward / 5);
+        Vector3 direction = rot * (wheelFL.transform.forward);
 
         //Debug.DrawLine(currentSensor.position, currentSensor.position + direction);
 
-        if (Physics.Raycast(currentSensor.position, direction, out hit, 0.2f))
+        if (Physics.Raycast(currentSensor.position, direction, out hit, aiSightDistance))
         {
             ApplyBrake();
             moving = false;

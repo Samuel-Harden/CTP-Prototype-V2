@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RoadGen : MonoBehaviour
 {
+    [SerializeField] GameObject TrafficLightPrefab;
     [SerializeField] List<Mesh> roadMeshPrefabs;
     [SerializeField] List<Material> roadMaterials;
     [Space] [SerializeField] GameObject roadPrefab;
@@ -205,7 +206,7 @@ public class RoadGen : MonoBehaviour
         else if (_section.GetNeighbours().Count > 2)
         {
             _section.gameObject.AddComponent<Intersection>();
-            _section.GetComponent<Intersection>().Initialise();
+            _section.GetComponent<Intersection>().Initialise(TrafficLightPrefab);
         }
 
     }

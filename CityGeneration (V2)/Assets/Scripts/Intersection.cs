@@ -9,27 +9,27 @@ public class Intersection : MonoBehaviour
 
     private RoadSection roadSection;
 
-    private List<GameObject> trafficZones;
+    private List<TrafficLight> trafficLights;
 
     private float delayTimer = 0;
     private float sectionTimer = 0;
 
-    private int currentSection;
+    private int currentLight;
 
     private bool onDelay;
 
     private Vector3 currentGreen;
 
 
-    public void Initialise()
+    public void Initialise(GameObject _trafficLight)
     {
-        trafficZones = new List<GameObject>();
+        trafficLights = new List<TrafficLight>();
 
         roadSection = GetComponent<RoadSection>();
 
-        SetupIntersection();
+        SetupIntersection(_trafficLight);
 
-        currentSection = 0;
+        currentLight = 0;
     }
 
 
@@ -47,7 +47,7 @@ public class Intersection : MonoBehaviour
             if (delayTimer > delayTime)
             {
                 // allow traffic through this section
-                DisableCurrentTrafficZone();
+                DisableCurrentTrafficLight();
 
                 // reset timer
                 delayTimer = 0;
@@ -64,7 +64,7 @@ public class Intersection : MonoBehaviour
             if(sectionTimer > sectionTime)
             {
                 // Set Delay & enable all sections
-                EnableAllTrafficZones();
+                EnableAllTrafficLights();
 
                 //Reset Timer
                 sectionTimer = 0;
@@ -76,29 +76,29 @@ public class Intersection : MonoBehaviour
     }
 
 
-    private void DisableCurrentTrafficZone()
+    private void DisableCurrentTrafficLight() // GREEN
     {
-        trafficZones[currentSection].transform.position = new Vector3(trafficZones[currentSection].transform.position.x, 3.0f, trafficZones[currentSection].transform.position.z);
+        trafficLights[currentLight].SetLight(true); // Green Light
 
-        currentGreen = trafficZones[currentSection].transform.position;
+        currentGreen = trafficLights[currentLight].transform.position;
 
-        currentSection++;
+        currentLight++;
 
-        if (currentSection == trafficZones.Count)
-            currentSection = 0;
+        if (currentLight == trafficLights.Count)
+            currentLight = 0;
     }
 
 
-    private void EnableAllTrafficZones()
+    private void EnableAllTrafficLights() // RED
     {
-        foreach(GameObject trafficZone in trafficZones)
+        foreach(TrafficLight trafficLight in trafficLights)
         {
-            trafficZone.transform.position = new Vector3(trafficZone.transform.position.x, 0.1f, trafficZone.transform.position.z);
+            trafficLight.SetLight(false); // Red Light
         }
     }
 
 
-    private void SetupIntersection()
+    private void SetupIntersection(GameObject _trafficLight)
     {
         // Set locations of colliders to stop Vehicles
         foreach (RoadSection junction in roadSection.GetNeighbours())
@@ -106,70 +106,48 @@ public class Intersection : MonoBehaviour
             // Check if connection is above or below this junction
             if(junction.Row() > roadSection.Row())
             {
-                Vector3 pos = new Vector3(transform.position.x + 0.2f, 0.1f, transform.position.z + 0.4f);
+                Vector3 pos = new Vector3(transform.position.x + 0.45f, 0.07f, transform.position.z + 0.55f);
+                Quaternion rot = Quaternion.Euler(-90.0f, 0.0f, 180.0f);
 
-                GenerateTrafficZone(pos);
+                GenerateTrafficLight(pos, rot, _trafficLight);
             }
 
             if(junction.Row() < roadSection.Row())
             {
-                Vector3 pos = new Vector3(transform.position.x - 0.2f, 0.1f, transform.position.z - 0.4f);
+                Vector3 pos = new Vector3(transform.position.x - 0.45f, 0.07f, transform.position.z - 0.55f);
+                Quaternion rot = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
 
-                GenerateTrafficZone(pos);
+                GenerateTrafficLight(pos, rot, _trafficLight);
             }
 
             // Check if connection is to the left or right of this junction
             if (junction.Col() > roadSection.Col())
             {
-                Vector3 pos = new Vector3(transform.position.x + 0.4f, 0.1f, transform.position.z - 0.2f);
+                Vector3 pos = new Vector3(transform.position.x + 0.55f, 0.07f, transform.position.z - 0.45f);
+                Quaternion rot = Quaternion.Euler(-90.0f, 0.0f, -90.0f);
 
-                GenerateTrafficZone(pos);
+                GenerateTrafficLight(pos, rot, _trafficLight);
             }
 
             if(junction.Col() < roadSection.Col())
             {
-                Vector3 pos = new Vector3(transform.position.x - 0.4f, 0.1f, transform.position.z + 0.2f);
+                Vector3 pos = new Vector3(transform.position.x - 0.55f, 0.07f, transform.position.z + 0.45f);
+                Quaternion rot = Quaternion.Euler(-90.0f, 0.0f, 90.0f);
 
-                GenerateTrafficZone(pos);
+                GenerateTrafficLight(pos, rot, _trafficLight);
             }
         }
     }
 
-    
-    private void GenerateTrafficZone(Vector3 _pos)
+
+    private void GenerateTrafficLight(Vector3 _pos, Quaternion _rotation, GameObject _trafficLight)
     {
-        GameObject trafficZone = new GameObject("TrafficZone");
+        var trafficLight = Instantiate(_trafficLight, _pos, _rotation);
 
-        trafficZone.transform.position = _pos;
+        trafficLight.GetComponent<TrafficLight>().Initialise();
 
-        trafficZone.transform.rotation = Quaternion.identity;
+        trafficLight.transform.parent = transform;
 
-        trafficZone.transform.parent = transform;
-
-        trafficZone.AddComponent<BoxCollider>();
-
-        trafficZone.GetComponent<BoxCollider>().isTrigger = true;
-
-        trafficZone.GetComponent<BoxCollider>().transform.localScale = new Vector3(0.1f, 0.2f, 0.1f);
-
-        trafficZone.layer = LayerMask.NameToLayer("TrafficSignal");
-;
-        trafficZones.Add(trafficZone);
-
-
-    }
-
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-
-        if (trafficZones.Count != 0)
-        {
-            if(!onDelay)
-            {
-                Gizmos.DrawWireSphere(new Vector3(currentGreen.x, 0.1f, currentGreen.z), 0.15f);
-            }
-        }
+        trafficLights.Add(trafficLight.GetComponent<TrafficLight>());
     }
 }
