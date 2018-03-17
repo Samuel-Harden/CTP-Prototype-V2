@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class TrafficLight : MonoBehaviour
 {
-    private BoxCollider coll;
-    private Vector3 resetPos;
     [SerializeField] Material redStd;
     [SerializeField] Material grnStd;
 
     [SerializeField] Material redEm;
     [SerializeField] Material grnEm;
 
+    private BoxCollider coll;
+    private Vector3 resetPos;
     private MeshRenderer rend;
+    private bool trafficWaiting;
 
     public void Initialise()
     {
@@ -20,7 +21,18 @@ public class TrafficLight : MonoBehaviour
         resetPos = coll.transform.position;
 
         rend = GetComponent<MeshRenderer>();
+    }
 
+
+    public void TrafficWaiting(bool _state)
+    {
+        trafficWaiting = _state;
+    }
+
+
+    public bool IsTrafficWaiting()
+    {
+        return trafficWaiting;
     }
 
 
@@ -42,7 +54,7 @@ public class TrafficLight : MonoBehaviour
             return;
         }
 
-        // REd Light
+        // red Light
         if (!_active)
         {
             // guna disable collider and set light

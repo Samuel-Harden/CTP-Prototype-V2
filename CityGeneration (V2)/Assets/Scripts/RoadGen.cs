@@ -13,6 +13,7 @@ public class RoadGen : MonoBehaviour
     private int cityWidth;
     private int cityLength;
     private int roadSize;
+    private float roadHeight;
 
     private RoadSection[,] roadMap;
     private List<RoadSection> roadMapList;
@@ -40,6 +41,8 @@ public class RoadGen : MonoBehaviour
         roadMapList = new List<RoadSection>();
 
         GenerateRoads(_buildingLots);
+
+        roadHeight = roadMapList[0].GetComponent<MeshFilter>().mesh.bounds.extents.y;
 
         SetNeighbours();
     }
@@ -221,6 +224,12 @@ public class RoadGen : MonoBehaviour
     public List<RoadSection> GetRoadNetworkList()
     {
         return roadMapList;
+    }
+
+
+    public float RoadHeight()
+    {
+        return roadHeight;
     }
 
 

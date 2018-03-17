@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Intersection : MonoBehaviour
 {
-    [SerializeField] float delayTime = 2.0f;
-    [SerializeField] float sectionTime = 8.5f;
+    private float delayTime;
+    private float sectionTime;
+
+    [SerializeField] float sectionTimeAlternate = 2.0f;
+    [SerializeField] float sectionTimeAllowTraffic = 8.5f;
+
+    [SerializeField] float delayTimeAlternate = 1.0f;
+    [SerializeField] float delayTimeAllowTraffic = 1.5f;
 
     private RoadSection roadSection;
 
@@ -18,7 +24,9 @@ public class Intersection : MonoBehaviour
 
     private bool onDelay;
 
-    private Vector3 currentGreen;
+    private SignalState signalState;
+
+    enum SignalState { AllowTraffic, Alternate };
 
 
     public void Initialise(GameObject _trafficLight)
@@ -30,6 +38,11 @@ public class Intersection : MonoBehaviour
         SetupIntersection(_trafficLight);
 
         currentLight = 0;
+
+        SignalState signalState = SignalState.Alternate;
+
+        delayTime = delayTimeAlternate;
+        sectionTime = sectionTimeAlternate;
     }
 
 
@@ -46,7 +59,8 @@ public class Intersection : MonoBehaviour
 
             if (delayTimer > delayTime)
             {
-                // allow traffic through this section
+                UpdateState();
+
                 DisableCurrentTrafficLight();
 
                 // reset timer
@@ -76,16 +90,62 @@ public class Intersection : MonoBehaviour
     }
 
 
+    private void UpdateState()
+    {
+        foreach (TrafficLight light in trafficLights)
+        {
+            if (light.IsTrafficWaiting())
+            {
+                signalState = SignalState.AllowTraffic;
+                sectionTime = sectionTimeAllowTraffic;
+                return;
+            }
+        }
+
+        signalState = SignalState.Alternate;
+        sectionTime = sectionTimeAlternate;
+    }
+
+
     private void DisableCurrentTrafficLight() // GREEN
     {
-        trafficLights[currentLight].SetLight(true); // Green Light
+        int counter = 0;
+        if (signalState == SignalState.AllowTraffic)
+        {
+            while (counter < trafficLights.Count)
+            {
+                if (trafficLights[currentLight].IsTrafficWaiting())
+                {
+                    trafficLights[currentLight].SetLight(true); // Green Light
 
-        currentGreen = trafficLights[currentLight].transform.position;
+                    trafficLights[currentLight].TrafficWaiting(false);
 
-        currentLight++;
+                    currentLight++;
 
-        if (currentLight == trafficLights.Count)
-            currentLight = 0;
+                    if (currentLight == trafficLights.Count)
+                        currentLight = 0;
+
+                    return;
+                }
+
+                currentLight++;
+
+                if (currentLight == trafficLights.Count)
+                    currentLight = 0;
+
+                counter++;
+            }
+        }
+
+        if (signalState == SignalState.Alternate)
+        {
+            trafficLights[currentLight].SetLight(true); // Green Light
+
+            currentLight++;
+
+            if (currentLight == trafficLights.Count)
+                currentLight = 0;
+        }
     }
 
 

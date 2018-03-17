@@ -23,6 +23,9 @@ public class AIVehicle : MonoBehaviour
     [Space]
     [SerializeField] MeshRenderer vehicleBody;
 
+    [Space]
+    [SerializeField] string trafficSignalLayer;
+
     private AITrafficController controller;
 
     private string direction;
@@ -196,6 +199,10 @@ public class AIVehicle : MonoBehaviour
         {
             ApplyBrake();
             moving = false;
+
+            // Set this light to has traffic waiting
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer(trafficSignalLayer))
+                UpdateJunction(hit);
         }
 
         else
@@ -203,6 +210,13 @@ public class AIVehicle : MonoBehaviour
             ReleaseBrake();
             moving = true;
         }
+    }
+
+
+    private void UpdateJunction(RaycastHit _hit)
+    {
+        if (_hit.transform.gameObject.GetComponentInParent<TrafficLight>())
+            _hit.transform.GetComponentInParent<TrafficLight>().TrafficWaiting(true);
     }
 
 

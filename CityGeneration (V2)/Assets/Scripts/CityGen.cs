@@ -9,6 +9,7 @@ public class CityGen : MonoBehaviour
     [SerializeField] int maxDepth;
     [SerializeField] float perlinNoise = 50;
     [SerializeField] bool showPositions;
+    [SerializeField] int minBuildDepth = 2;
 
     [SerializeField] GameObject lotPrefab;
     [SerializeField] GameObject lotContainer;
@@ -20,6 +21,7 @@ public class CityGen : MonoBehaviour
     private List<BuildingLot> buildingLots;
 
     private RoadGen roadGen;
+    private ObjectGen objectGen;
     private AITrafficController trafficController;
 
 
@@ -29,6 +31,8 @@ public class CityGen : MonoBehaviour
         buildingLots = new List<BuildingLot>();
 
         roadGen = GetComponent<RoadGen>();
+        objectGen = GetComponent<ObjectGen>();
+
         trafficController = GetComponentInChildren<AITrafficController>();
 
         GeneratePositions();
@@ -72,14 +76,27 @@ public class CityGen : MonoBehaviour
         buildingLots.Add(buildingLot.GetComponent<BuildingLot>());
 
         buildingLot.GetComponent<BuildingLot>().Initialise(pos, nodeSizeX, nodeSizeZ, maxDepth,
-            lotPrefab, tileSize, buildingLots, perlinPositions);
+            lotPrefab, tileSize, buildingLots, perlinPositions, 0);
 
         ClearDividedLots();
 
         roadGen.Initialise(buildingLots, cityWidth, cityLength, tileSize);
 
+        UpdateLotData();
+
+        objectGen.GenerateLots(buildingLots, minBuildDepth, roadGen.RoadHeight());
+
         trafficController.Initialise(roadGen.GetRoadNetwork(),
             roadGen.GetRoadNetworkList(), cityWidth, cityLength);
+    }
+
+
+    private void UpdateLotData()
+    {
+        foreach (BuildingLot lot in buildingLots)
+        {
+            lot.RecalculateLotSize();
+        }
     }
 
 

@@ -17,25 +17,50 @@ public class BuildingLot : MonoBehaviour
     private int buildDepth = 2;
     private int counter;
 
+    private int tileSize;
+
+    private float lotWidthUpdated;
+    private float lotLengthUpdated;
+
+    private int division;
+
     private Color myColor = Color.red;
 
     [SerializeField] bool gizmosEnabled;
 
     public void Initialise(Vector3 _pos, float _lotWidth, float _lotLength, int _maxDepth,
         GameObject _lotPrefab, int _tileSize, List<BuildingLot> _buildingLots,
-        List<Vector3> _perlinPositions)
+        List<Vector3> _perlinPositions, int _division)
     {
         divided = false;
         lotWidth = _lotWidth;
         lotLength = _lotLength;
+        tileSize = _tileSize;
+
+        division = _division;
 
         if (_maxDepth > 0)
         {
             if (DivideCheck(_perlinPositions))
             {
-                Divide(_perlinPositions, _maxDepth, _lotPrefab, _buildingLots, _tileSize);
+                _division++;
+                Divide(_perlinPositions, _maxDepth, _lotPrefab, _buildingLots, _tileSize, _division);
             }
         }
+    }
+
+    // This recalculates the lot size and factors in the roads
+    public void RecalculateLotSize()
+    {
+        Vector3 updatedPos = transform.position;
+
+        updatedPos.x += (float)tileSize / 2;
+        updatedPos.z += (float)tileSize / 2;
+
+        transform.position = updatedPos;
+
+        lotLengthUpdated = lotLength - tileSize;
+        lotWidthUpdated  = lotWidth  - tileSize;
     }
 
 
@@ -66,7 +91,7 @@ public class BuildingLot : MonoBehaviour
 
 
     private void Divide(List<Vector3> _perlinPositions, int _maxDepth,
-        GameObject _lotPrefab, List<BuildingLot> _buildingLots, int _tileSize)
+        GameObject _lotPrefab, List<BuildingLot> _buildingLots, int _tileSize, int _division)
     {
         _maxDepth -= 1;
 
@@ -78,8 +103,6 @@ public class BuildingLot : MonoBehaviour
         Vector3 newPos = transform.position;
 
         int count = 0;
-
-        //List<BuildingLotData> lotDataPackages = GenerateLotData(_tileSize);
 
         // Check if Lot needs an Offset
         offsetWidth  = Offset(lotWidth, _tileSize);
@@ -120,7 +143,7 @@ public class BuildingLot : MonoBehaviour
             }
 
             GenerateLot(newPos, lotSizeX, lotSizeZ, _perlinPositions,
-                _maxDepth, _lotPrefab, _buildingLots, _tileSize);
+                _maxDepth, _lotPrefab, _buildingLots, _tileSize, _division);
 
             if (offsetWidth && sizeX)
                 newPos.x += lotWidth / 2 + (float)_tileSize / 2;
@@ -150,14 +173,14 @@ public class BuildingLot : MonoBehaviour
 
     private void GenerateLot(Vector3 _newPos, float _lotSizeX, float _lotSizeZ,
         List<Vector3> _perlinPositions, int _maxDepth, GameObject _lotPrefab,
-        List<BuildingLot> _buildingLots, int _tileSize)
+        List<BuildingLot> _buildingLots, int _tileSize, int _division)
     {
         var buildingLot = Instantiate(_lotPrefab, _newPos, Quaternion.identity);
 
         _buildingLots.Add(buildingLot.GetComponent<BuildingLot>());
 
         buildingLot.GetComponent<BuildingLot>().Initialise(_newPos, _lotSizeX,
-            _lotSizeZ, _maxDepth, _lotPrefab, _tileSize, _buildingLots, _perlinPositions);
+            _lotSizeZ, _maxDepth, _lotPrefab, _tileSize, _buildingLots, _perlinPositions, _division);
     }
 
 
@@ -170,47 +193,6 @@ public class BuildingLot : MonoBehaviour
         }
 
         return false;
-    }
-
-
-    private List<BuildingLotData> GenerateLotData(int _tileSize)
-    {
-        List<BuildingLotData> dataPackages = new List<BuildingLotData>();
-
-        //Split this area so that I have 4 new lots, all different sizes,
-        // but will fit into a tilemap after (no remainders based on tileSize)
-
-        for (int i = 0; i < noDivisions; i++)
-        {
-            BuildingLotData lotData = new BuildingLotData();
-
-            dataPackages.Add(lotData);
-        }
-
-        // check if offset is needed
-        if ((lotWidth / 2) % _tileSize == 0)
-        {
-            myColor = Color.green;
-            Debug.Log("Perfect Fit");
-            // All lots will be exactly the same size
-
-            foreach (BuildingLotData lotData in dataPackages)
-            {
-                lotData.lotWidth = lotWidth / 2;
-                lotData.lotLength = lotLength / 2;
-            }
-        }
-
-        else
-        {
-
-            Debug.Log("Needs to Be Offset");
-        }
-
-        //int xCount = lotWidth / _tileSize;
-        //int zCount = lotLength / _tileSize;
-
-        return dataPackages;
     }
 
 
@@ -231,6 +213,23 @@ public class BuildingLot : MonoBehaviour
         return lotLength;
     }
 
+    public float LengthUpdated()
+    {
+        return lotLengthUpdated;
+    }
+
+
+    public float WidthUpdated()
+    {
+        return lotWidthUpdated;
+    }
+
+
+    public int Division()
+    {
+        return division;
+    }
+
 
     private void OnDrawGizmos()
     {
@@ -239,16 +238,16 @@ public class BuildingLot : MonoBehaviour
             Gizmos.color = myColor;
 
             // Bottom Left to Bottom Right
-            Gizmos.DrawLine(transform.position, new Vector3(transform.position.x + lotWidth, 0, transform.position.z));
+            Gizmos.DrawLine(transform.position, new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z));
 
             // Bottom Right to Top Right
-            Gizmos.DrawLine(new Vector3(transform.position.x + lotWidth, 0, transform.position.z), new Vector3(transform.position.x + lotWidth, 0, transform.position.z + lotLength));
+            Gizmos.DrawLine(new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z), new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z + lotLengthUpdated));
 
             // Top Right to Top Left
-            Gizmos.DrawLine(new Vector3(transform.position.x + lotWidth, 0, transform.position.z + lotLength), new Vector3(transform.position.x, 0, transform.position.z + lotLength));
+            Gizmos.DrawLine(new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z + lotLengthUpdated), new Vector3(transform.position.x, 0, transform.position.z + lotLengthUpdated));
 
             // Top Left to Bottom Left
-            Gizmos.DrawLine(new Vector3(transform.position.x, 0, transform.position.z + lotLength), transform.position);
+            Gizmos.DrawLine(new Vector3(transform.position.x, 0, transform.position.z + lotLengthUpdated), transform.position);
         }
     }
 }
