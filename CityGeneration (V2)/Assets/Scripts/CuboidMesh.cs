@@ -15,14 +15,14 @@ public class CuboidMesh : MonoBehaviour
         mesh_cuboid.Clear();
 
         #region Vertices
-        Vector3 pos_0 = new Vector3(-_width * 0.5f, -_height * 0.5f, _length * 0.5f);
-        Vector3 pos_1 = new Vector3(_width * 0.5f, -_height * 0.5f, _length * 0.5f);
-        Vector3 pos_2 = new Vector3(_width * 0.5f, -_height * 0.5f, -_length * 0.5f);
+        Vector3 pos_0 = new Vector3(-_width * 0.5f, -_height * 0.5f, _length  * 0.5f);
+        Vector3 pos_1 = new Vector3(_width  * 0.5f, -_height * 0.5f, _length  * 0.5f);
+        Vector3 pos_2 = new Vector3(_width  * 0.5f, -_height * 0.5f, -_length * 0.5f);
         Vector3 pos_3 = new Vector3(-_width * 0.5f, -_height * 0.5f, -_length * 0.5f);
 
-        Vector3 pos_4 = new Vector3(-_width * 0.5f, _height * 0.5f, _length * 0.5f);
-        Vector3 pos_5 = new Vector3(_width * 0.5f, _height * 0.5f, _length * 0.5f);
-        Vector3 pos_6 = new Vector3(_width * 0.5f, _height * 0.5f, -_length * 0.5f);
+        Vector3 pos_4 = new Vector3(-_width * 0.5f, _height * 0.5f, _length  * 0.5f);
+        Vector3 pos_5 = new Vector3(_width  * 0.5f, _height * 0.5f, _length  * 0.5f);
+        Vector3 pos_6 = new Vector3(_width  * 0.5f, _height * 0.5f, -_length * 0.5f);
         Vector3 pos_7 = new Vector3(-_width * 0.5f, _height * 0.5f, -_length * 0.5f);
 
 

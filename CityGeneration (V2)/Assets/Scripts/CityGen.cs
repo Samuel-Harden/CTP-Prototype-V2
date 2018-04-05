@@ -82,20 +82,35 @@ public class CityGen : MonoBehaviour
 
         roadGen.Initialise(buildingLots, cityWidth, cityLength, tileSize);
 
-        UpdateLotData();
+        UpdateLotSize();
 
-        objectGen.GenerateLots(buildingLots, minBuildDepth, roadGen.RoadHeight());
+        objectGen.Initialze(minBuildDepth, roadGen.RoadHeight());
+
+        objectGen.GeneratePaths(buildingLots);
+
+        GenerateLotData();
+
+        objectGen.GenerateLots(buildingLots);
 
         trafficController.Initialise(roadGen.GetRoadNetwork(),
             roadGen.GetRoadNetworkList(), cityWidth, cityLength);
     }
 
 
-    private void UpdateLotData()
+    private void UpdateLotSize()
     {
         foreach (BuildingLot lot in buildingLots)
         {
             lot.RecalculateLotSize();
+        }
+    }
+
+
+    private void GenerateLotData()
+    {
+        foreach (BuildingLot lot in buildingLots)
+        {
+            lot.CalculateBuildingData();
         }
     }
 

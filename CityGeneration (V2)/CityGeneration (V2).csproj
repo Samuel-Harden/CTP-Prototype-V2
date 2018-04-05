@@ -83,10 +83,10 @@
     <Compile Include="Assets\Scripts\AIVehicle.cs" />
     <Compile Include="Assets\Scripts\AIWaypoints.cs" />
     <Compile Include="Assets\Scripts\BuildingLot.cs" />
-    <Compile Include="Assets\Scripts\BuildingLotData.cs" />
     <Compile Include="Assets\Scripts\CityGen.cs" />
     <Compile Include="Assets\Scripts\CuboidMesh.cs" />
     <Compile Include="Assets\Scripts\Intersection.cs" />
+    <Compile Include="Assets\Scripts\MeshCombine.cs" />
     <Compile Include="Assets\Scripts\ObjectGen.cs" />
     <Compile Include="Assets\Scripts\PlaneMesh.cs" />
     <Compile Include="Assets\Scripts\RoadGen.cs" />

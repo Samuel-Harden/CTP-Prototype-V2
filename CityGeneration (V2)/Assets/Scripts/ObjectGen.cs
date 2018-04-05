@@ -17,13 +17,18 @@ public class ObjectGen : MonoBehaviour
     [SerializeField] GameObject pavementContainer;
     [SerializeField] GameObject buildingContainer;
 
+    [SerializeField] GameObject baseBuildingObj;
+
     private PlaneMesh planeMesh;
     private CuboidMesh cuboidMesh;
 
     private int minBuildDepth;
     private float roadHeight;
 
-    public void GenerateLots(List<BuildingLot> _lots, int _minBuildDepth, float _roadHeight)
+    private int panelSize = 1;
+
+
+    public void Initialze(int _minBuildDepth, float _roadHeight)
     {
         planeMesh = GetComponent<PlaneMesh>();
         cuboidMesh = GetComponent<CuboidMesh>();
@@ -31,13 +36,16 @@ public class ObjectGen : MonoBehaviour
         minBuildDepth = _minBuildDepth;
 
         roadHeight = 0.07f;
+    }
 
-        GeneratePaths(_lots);
 
+    public void GenerateLots(List<BuildingLot> _lots)
+    {
         GenerateBuildings(_lots);
     }
 
 
+    // loop through each side of each building creating each panel
     private void GenerateBuildings(List<BuildingLot> _lots)
     {
         foreach (BuildingLot lot in _lots)
@@ -45,28 +53,52 @@ public class ObjectGen : MonoBehaviour
             // Build Something
             if (lot.Division() > minBuildDepth)
             {
-                float height = (int)Random.Range(3, 9);
-                // build a base cube
-                var building = cuboidMesh.GenerateCuboid(cuboidMeshPrefab, lot.WidthUpdated() - 1, lot.LengthUpdated() - 1, height);
+                var buildingRoot = Instantiate(baseBuildingObj, Vector3.zero, Quaternion.identity);
 
-                Vector3 pos = lot.transform.position;
+                Vector3 newPos = lot.transform.position;
 
-                pos.x += lot.WidthUpdated() / 2;
-                pos.z += lot.LengthUpdated() / 2;
+                newPos.x += lot.WidthUpdated() / 2;
+                newPos.z += lot.LengthUpdated() / 2;
 
-                pos.y = height / 2 + 0.07f;
+                newPos.y = lot.height / 2 + 0.07f; // 0.07f (Offset for road Mesh)
 
-                building.transform.position = pos;
+                buildingRoot.transform.position = newPos;
 
-                SetTexture(building);
+                // loop through panels
+                for (int i = 0; i < lot.GetPanelPositions().Count; i++)
+                {
+                    if (lot.GetPanelState(i) == true)
+                    {
+                        var panel = planeMesh.GeneratePlane(planeMeshPrefab, panelSize, panelSize);
 
-                building.transform.parent = buildingContainer.transform;
+                        panel.transform.eulerAngles = lot.GetPanelRotation(i);
+
+                        Vector3 pos = lot.transform.position;
+
+                        pos.x += lot.GetPanelPosition(i).x + (float)panelSize / 2;
+                        pos.y += lot.GetPanelPosition(i).y;
+                        pos.z += lot.GetPanelPosition(i).z + (float)panelSize / 2;
+
+                        panel.transform.position = pos;
+
+                        SetTexture(panel);
+
+                        panel.transform.parent = buildingRoot.transform;
+                    }
+                }
+
+                // Merge components into parents mesh
+                buildingRoot.GetComponent<MeshCombine>().CombineMeshes();
+
+                SetTexture(buildingRoot);
+
+                buildingRoot.transform.parent = buildingContainer.transform;
             }
         }
     }
 
 
-    private void GeneratePaths(List<BuildingLot> _lots)
+    public void GeneratePaths(List<BuildingLot> _lots)
     {
         foreach (BuildingLot lot in _lots)
         {
