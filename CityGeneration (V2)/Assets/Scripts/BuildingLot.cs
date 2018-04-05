@@ -29,18 +29,24 @@ public class BuildingLot : MonoBehaviour
     // the min size a building can be
     private int minBuildingSize = 2;
 
-    // These will be used to generate the mesh for the building
-    private List<bool> panelStates;
-    private List<Vector3> panelPositions;
-    private List<Vector3> panelRotations;
+    // The panels that make up the building
+    private List<List<Panel>> buildingPanels;
+    private List<Panel> posXPanels;
+    private List<Panel> posZPanels;
+    private List<Panel> negXPanels;
+    private List<Panel> negZPanels;
+    private List<Panel> posYPanels;
 
-    public int posXOffset;
-    public int posZOffset;
+    private List<int> mutationDirections;
 
-    public int mainBuildingWidth;
-    public int mainBuildingLength;
+    private int posXOffset;
+    private int posZOffset;
 
-    public int height = 2;
+    private int mainBuildingWidth;
+    private int mainBuildingLength;
+
+    private int mainBuildingHeight;
+    private int currentMutationHeight;
 
     private Color myColor = Color.red;
 
@@ -87,16 +93,53 @@ public class BuildingLot : MonoBehaviour
     {
         if (division > buildDepth)
         {
-            // 5 side left, right, forward, back, up
-            // for each side generate a2d array representing each panel
-            // object gen will then generate each panel
-            // finally all panels will be merged into one complete mesh
-
-            panelPositions = new List<Vector3>();
-            panelRotations = new List<Vector3>();
-            panelStates = new List<bool>();
-
             GenerateBuildingMain();
+
+            buildingPanels = new List<List<Panel>>();
+
+            // here is where the data for each face is made, once this is complete, panels
+            // can be enabled to generate desired building shape
+
+            Vector3 pos = transform.position + new Vector3(lotWidthUpdated - ((float)panelSize / 2),
+                ((float)panelSize / 2), (float)panelSize);
+
+            posXPanels = BuildingCreationKit.GeneratePosXList(((int)lotLengthUpdated - panelSize),
+                mainBuildingHeight, pos);
+
+            buildingPanels.Add(posXPanels);
+
+
+            pos = transform.position + new Vector3(lotWidthUpdated - (float)panelSize,
+                ((float)panelSize / 2), lotLengthUpdated - ((float)panelSize / 2));
+
+            posZPanels = BuildingCreationKit.GeneratePosZList(((int)lotWidthUpdated - panelSize),
+                mainBuildingHeight, pos);
+
+            buildingPanels.Add(posZPanels);
+
+
+            pos = transform.position + new Vector3(((float)panelSize / 2), ((float)panelSize / 2),
+                lotLengthUpdated - panelSize);
+
+            negXPanels = BuildingCreationKit.GenerateNegXList(((int)lotLengthUpdated - panelSize),
+                mainBuildingHeight, pos);
+
+            buildingPanels.Add(negXPanels);            
+
+
+            pos = transform.position + new Vector3((float)panelSize, ((float)panelSize / 2),
+                ((float)panelSize / 2));
+
+            negZPanels = BuildingCreationKit.GenerateNegZList(((int)lotWidthUpdated - panelSize),
+                mainBuildingHeight, pos);
+
+            buildingPanels.Add(negZPanels);
+
+            pos = transform.position + new Vector3((float)panelSize, mainBuildingHeight, (float)panelSize);
+
+            posYPanels = BuildingCreationKit.GeneratePosYList(((int)lotWidthUpdated - panelSize),
+                ((int)lotLengthUpdated - panelSize), pos);
+            buildingPanels.Add(posYPanels);
         }
     }
 
@@ -122,139 +165,8 @@ public class BuildingLot : MonoBehaviour
         posXOffset = Random.Range(0, ((int)lotWidthUpdated - 1) - mainBuildingWidth);
         posZOffset = Random.Range(0, ((int)lotLengthUpdated - 1) - mainBuildingLength);
 
-        GenerateZPanelList();
-        GenerateXPanelList();
-        GenerateRoofPanelList();
-    }
-
-
-    private void GenerateZPanelList()
-    {
-        for (int h = 0; h < height; h++)
-        {
-            for (int w = 0; w < (int)lotWidthUpdated - 1; w++)
-            {
-                // Z panel Negative
-                if (w >= posXOffset && w < (mainBuildingWidth + posXOffset))
-                {
-                    panelStates.Add(true);
-
-                    panelPositions.Add(new Vector3(w + ((float)panelSize / 2),
-                        h + ((float)panelSize / 2), posZOffset));
-
-                    panelRotations.Add(new Vector3(90.0f, 180.0f, 0.0f));
-                }
-
-                else
-                {
-                    panelStates.Add(false);
-
-                    panelPositions.Add(Vector3.zero);
-
-                    panelRotations.Add(Vector3.zero);
-                }
-
-                // Z panel Positive
-                if (w >= posXOffset && w < (mainBuildingWidth + posXOffset))
-                {
-                    panelStates.Add(true);
-
-                    panelPositions.Add(new Vector3(w + ((float)panelSize / 2),
-                        h + ((float)panelSize / 2), posZOffset + mainBuildingLength));
-
-                    panelRotations.Add(new Vector3(90.0f, 0.0f, 0.0f));
-                }
-
-                else
-                {
-                    panelStates.Add(false);
-
-                    panelPositions.Add(Vector3.zero);
-
-                    panelRotations.Add(Vector3.zero);
-                }
-            }
-        }
-    }
-
-
-    private void GenerateXPanelList()
-    {
-        for (int h = 0; h < height; h++)
-        {
-            for (int l = 0; l < (int)lotLengthUpdated - 1; l++)
-            {
-                // x panel negative
-                if (l >= posZOffset && l < (mainBuildingLength + posZOffset))
-                {
-                    panelStates.Add(true);
-
-                    panelPositions.Add(new Vector3( posXOffset,
-                        h + ((float)panelSize / 2), l + ((float)panelSize / 2)));
-
-                    panelRotations.Add(new Vector3(90.0f, 270.0f, 0.0f));
-                }
-
-                else
-                {
-                    panelStates.Add(false);
-
-                    panelPositions.Add(Vector3.zero);
-
-                    panelRotations.Add(Vector3.zero);
-                }
-
-                // x panel Positive
-                if (l >= posZOffset && l < (mainBuildingLength + posZOffset))
-                {
-                    panelStates.Add(true);
-
-                    panelPositions.Add(new Vector3( posXOffset + mainBuildingWidth,
-                        h + ((float)panelSize / 2), l + ((float)panelSize / 2)));
-
-                    panelRotations.Add(new Vector3(90.0f, 90.0f, 0.0f));
-                }
-
-                else
-                {
-                    panelStates.Add(false);
-
-                    panelPositions.Add(Vector3.zero);
-
-                    panelRotations.Add(Vector3.zero);
-                }
-            }
-        }
-    }
-
-
-    private void GenerateRoofPanelList()
-    {
-        for (int l = 0; l < lotLengthUpdated - 1; l++)
-        {
-            for (int w = 0; w < lotWidthUpdated - 1; w++)
-            {
-                // roof panels
-                if (l >= posZOffset && l < (mainBuildingLength + posZOffset) && w >= posXOffset && w < (mainBuildingWidth + posXOffset))
-                {
-                    panelStates.Add(true);
-
-                    panelPositions.Add(new Vector3( w + ((float)panelSize / 2),
-                        height, l + ((float)panelSize / 2)));
-
-                    panelRotations.Add(new Vector3(0.0f, 0.0f, 0.0f));
-                }
-
-                else
-                {
-                    panelStates.Add(false);
-
-                    panelPositions.Add(Vector3.zero);
-
-                    panelRotations.Add(Vector3.zero);
-                }
-            }
-        }
+        // Set Height
+        mainBuildingHeight = mainBuildingLength + mainBuildingWidth * 2;
     }
 
 
@@ -390,39 +302,27 @@ public class BuildingLot : MonoBehaviour
     }
 
 
-    public List<Vector3> GetPanelPositions()
+    public List<List<Panel>> GetBuildingPanelList()
     {
-        return panelPositions;
+        return buildingPanels;
     }
 
 
-    public List<Vector3> GetPanelRotations()
+    public List<Panel> GetBuildingPanels(int _index)
     {
-        return panelRotations;
+        return buildingPanels[_index];
     }
 
 
-    public List<bool> GetPanelStates()
+    public Panel GetBuildingPanel(int _listIndex, int _index)
     {
-        return panelStates;
+        return buildingPanels[_listIndex][_index];
     }
 
 
-    public Vector3 GetPanelPosition(int _index)
+    public float GetMainBuildingHeight()
     {
-        return panelPositions[_index];
-    }
-
-
-    public Vector3 GetPanelRotation(int _index)
-    {
-        return panelRotations[_index];
-    }
-
-
-    public bool GetPanelState(int _index)
-    {
-        return panelStates[_index];
+        return mainBuildingHeight;
     }
 
 

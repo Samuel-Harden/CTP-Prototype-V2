@@ -20,7 +20,6 @@ public class ObjectGen : MonoBehaviour
     [SerializeField] GameObject baseBuildingObj;
 
     private PlaneMesh planeMesh;
-    private CuboidMesh cuboidMesh;
 
     private int minBuildDepth;
     private float roadHeight;
@@ -31,7 +30,6 @@ public class ObjectGen : MonoBehaviour
     public void Initialze(int _minBuildDepth, float _roadHeight)
     {
         planeMesh = GetComponent<PlaneMesh>();
-        cuboidMesh = GetComponent<CuboidMesh>();
 
         minBuildDepth = _minBuildDepth;
 
@@ -60,36 +58,44 @@ public class ObjectGen : MonoBehaviour
                 newPos.x += lot.WidthUpdated() / 2;
                 newPos.z += lot.LengthUpdated() / 2;
 
-                newPos.y = lot.height / 2 + 0.07f; // 0.07f (Offset for road Mesh)
+                newPos.y += (lot.GetMainBuildingHeight() / 2);
 
                 buildingRoot.transform.position = newPos;
 
-                // loop through panels
-                for (int i = 0; i < lot.GetPanelPositions().Count; i++)
+                // loop through panels for each face of building
+                for (int i = 0; i < lot.GetBuildingPanelList().Count; i++)
                 {
-                    if (lot.GetPanelState(i) == true)
+                    for (int j = 0; j < lot.GetBuildingPanels(i).Count; j++)
                     {
-                        var panel = planeMesh.GeneratePlane(planeMeshPrefab, panelSize, panelSize);
+                        if (lot.GetBuildingPanel(i, j) != null)
+                        {
+                            var panel = planeMesh.GeneratePlane(planeMeshPrefab, panelSize, panelSize);
 
-                        panel.transform.eulerAngles = lot.GetPanelRotation(i);
+                            panel.transform.eulerAngles = lot.GetBuildingPanel(i, j).Rotation();
 
-                        Vector3 pos = lot.transform.position;
+                            panel.transform.position = lot.GetBuildingPanel(i, j).Position();
 
-                        pos.x += lot.GetPanelPosition(i).x + (float)panelSize / 2;
-                        pos.y += lot.GetPanelPosition(i).y;
-                        pos.z += lot.GetPanelPosition(i).z + (float)panelSize / 2;
+                            //Vector3 pos = lot.transform.position;
 
-                        panel.transform.position = pos;
+                            //Vector3 panelOffset = lot.GetBuildingPanel(i, j).Position();
 
-                        SetTexture(panel);
+                            //pos.x += panelOffset.x + (float)panelSize / 2;
+                            //pos.y += panelOffset.y + 0.07f;
+                            //pos.z += panelOffset.z + (float)panelSize / 2;
 
-                        panel.transform.parent = buildingRoot.transform;
+                            //panel.transform.position = pos;
+
+                            SetTexture(panel);
+
+                            panel.transform.parent = buildingRoot.transform;
+                        }
                     }
                 }
 
                 // Merge components into parents mesh
                 buildingRoot.GetComponent<MeshCombine>().CombineMeshes();
 
+                // now all panels have been merged, we can apply a texture to the mesh
                 SetTexture(buildingRoot);
 
                 buildingRoot.transform.parent = buildingContainer.transform;
