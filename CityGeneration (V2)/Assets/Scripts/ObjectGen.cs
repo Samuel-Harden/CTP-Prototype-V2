@@ -75,16 +75,6 @@ public class ObjectGen : MonoBehaviour
 
                             panel.transform.position = lot.GetBuildingPanel(i, j).Position();
 
-                            //Vector3 pos = lot.transform.position;
-
-                            //Vector3 panelOffset = lot.GetBuildingPanel(i, j).Position();
-
-                            //pos.x += panelOffset.x + (float)panelSize / 2;
-                            //pos.y += panelOffset.y + 0.07f;
-                            //pos.z += panelOffset.z + (float)panelSize / 2;
-
-                            //panel.transform.position = pos;
-
                             SetTexture(panel);
 
                             panel.transform.parent = buildingRoot.transform;

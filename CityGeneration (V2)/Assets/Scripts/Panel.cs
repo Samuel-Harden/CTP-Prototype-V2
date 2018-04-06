@@ -31,7 +31,14 @@ public class Panel
         panelStatus = _status;
     }
 
-        // Getters
+
+    public void SetPosition(Vector3 _pos)
+    {
+        position = _pos;
+    }
+
+
+    // Getters
     public bool PanelStatus()
     {
         return panelStatus;

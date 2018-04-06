@@ -93,12 +93,13 @@ public class BuildingLot : MonoBehaviour
     {
         if (division > buildDepth)
         {
-            GenerateBuildingMain();
-
             buildingPanels = new List<List<Panel>>();
 
             // here is where the data for each face is made, once this is complete, panels
             // can be enabled to generate desired building shape
+
+            // Get main building data first
+            GenerateBuildingMain();
 
             Vector3 pos = transform.position + new Vector3(lotWidthUpdated - ((float)panelSize / 2),
                 ((float)panelSize / 2), (float)panelSize);
@@ -109,8 +110,8 @@ public class BuildingLot : MonoBehaviour
             buildingPanels.Add(posXPanels);
 
 
-            pos = transform.position + new Vector3(lotWidthUpdated - (float)panelSize,
-                ((float)panelSize / 2), lotLengthUpdated - ((float)panelSize / 2));
+            pos = transform.position + new Vector3((float)panelSize, ((float)panelSize / 2),
+                lotLengthUpdated - ((float)panelSize / 2));
 
             posZPanels = BuildingCreationKit.GeneratePosZList(((int)lotWidthUpdated - panelSize),
                 mainBuildingHeight, pos);
@@ -119,7 +120,7 @@ public class BuildingLot : MonoBehaviour
 
 
             pos = transform.position + new Vector3(((float)panelSize / 2), ((float)panelSize / 2),
-                lotLengthUpdated - panelSize);
+                (float)panelSize);
 
             negXPanels = BuildingCreationKit.GenerateNegXList(((int)lotLengthUpdated - panelSize),
                 mainBuildingHeight, pos);
@@ -140,6 +141,31 @@ public class BuildingLot : MonoBehaviour
             posYPanels = BuildingCreationKit.GeneratePosYList(((int)lotWidthUpdated - panelSize),
                 ((int)lotLengthUpdated - panelSize), pos);
             buildingPanels.Add(posYPanels);
+
+
+            BuildingCreationKit.UpdatePosXPanelList(posXPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
+
+            BuildingCreationKit.UpdateNegXPanelList(negXPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
+
+            BuildingCreationKit.UpdatePosZPanelList(posZPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
+
+            BuildingCreationKit.UpdateNegZPanelList(negZPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
+
+            BuildingCreationKit.UpdatePosYPanelList(posYPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
+
+            // GenerateMutations();
+
+            BuildingCreationKit.ClearUnusedPanels(buildingPanels);
         }
     }
 
