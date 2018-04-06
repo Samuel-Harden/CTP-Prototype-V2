@@ -160,6 +160,28 @@ public static class BuildingCreationKit
         }
     }
 
+
+    public static void UpdateAllLists(List<Panel> _posXPanels, List<Panel> _negXPanels, List<Panel> _posZPanels, 
+        List<Panel> _negZPanels, List<Panel> _posYPanels, int _lotLength, int _lotWidth,
+        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    {
+        UpdatePosXPanelList(_posXPanels, _lotLength, _lotWidth, _updateHeight,
+            _updateLength, _updateWidth, _posXOffset, _posZOffset);
+
+        UpdateNegXPanelList(_negXPanels, _lotLength, _lotWidth, _updateHeight,
+            _updateLength, _updateWidth, _posXOffset, _posZOffset);
+
+        UpdatePosZPanelList(_posZPanels, _lotLength, _lotWidth, _updateHeight,
+            _updateLength, _updateWidth, _posXOffset, _posZOffset);
+
+        UpdateNegZPanelList(_negZPanels, _lotLength, _lotWidth, _updateHeight,
+            _updateLength, _updateWidth, _posXOffset, _posZOffset);
+
+        UpdatePosYPanelList(_posYPanels, _lotLength, _lotWidth, _updateHeight,
+            _updateLength, _updateWidth, _posXOffset, _posZOffset);
+    }
+
+
     // PosX face
     public static void UpdatePosXPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
         int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
@@ -291,5 +313,11 @@ public static class BuildingCreationKit
                 }
             }
         }
+    }
+
+
+    public static void GenerateMutations(BuildingLot _lot)
+    {
+
     }
 }

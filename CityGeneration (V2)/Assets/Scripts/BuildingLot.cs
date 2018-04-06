@@ -143,27 +143,11 @@ public class BuildingLot : MonoBehaviour
             buildingPanels.Add(posYPanels);
 
 
-            BuildingCreationKit.UpdatePosXPanelList(posXPanels, ((int)lotLengthUpdated - 1),
-                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
-                mainBuildingWidth, posXOffset, posZOffset);
+            BuildingCreationKit.UpdateAllLists(posXPanels, negXPanels, posZPanels, negZPanels, posYPanels,
+                ((int)lotLengthUpdated - 1), ((int)lotWidthUpdated - 1), mainBuildingHeight,
+                mainBuildingLength, mainBuildingWidth, posXOffset, posZOffset);
 
-            BuildingCreationKit.UpdateNegXPanelList(negXPanels, ((int)lotLengthUpdated - 1),
-                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
-                mainBuildingWidth, posXOffset, posZOffset);
-
-            BuildingCreationKit.UpdatePosZPanelList(posZPanels, ((int)lotLengthUpdated - 1),
-                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
-                mainBuildingWidth, posXOffset, posZOffset);
-
-            BuildingCreationKit.UpdateNegZPanelList(negZPanels, ((int)lotLengthUpdated - 1),
-                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
-                mainBuildingWidth, posXOffset, posZOffset);
-
-            BuildingCreationKit.UpdatePosYPanelList(posYPanels, ((int)lotLengthUpdated - 1),
-                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
-                mainBuildingWidth, posXOffset, posZOffset);
-
-            // GenerateMutations();
+            BuildingCreationKit.GenerateMutations(this);
 
             BuildingCreationKit.ClearUnusedPanels(buildingPanels);
         }
