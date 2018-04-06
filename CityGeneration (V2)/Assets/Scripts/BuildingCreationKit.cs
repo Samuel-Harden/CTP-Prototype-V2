@@ -24,10 +24,10 @@ public static class BuildingCreationKit
 
                 panels.Add(panel);
 
-                pos.z -= panelSize;
+                pos.z += panelSize;
             }
 
-            pos.z += _faceWidth;
+            pos.z -= _faceWidth;
             pos.y += panelSize;
         }
 
@@ -78,10 +78,10 @@ public static class BuildingCreationKit
 
                 panels.Add(panel);
 
-                pos.x -= panelSize;
+                pos.x += panelSize;
             }
 
-            pos.x += _faceWidth;
+            pos.x -= _faceWidth;
             pos.y += panelSize;
         }
 
@@ -160,7 +160,7 @@ public static class BuildingCreationKit
         }
     }
 
-    // Right face
+    // PosX face
     public static void UpdatePosXPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
         int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
     {
@@ -169,7 +169,7 @@ public static class BuildingCreationKit
             for (int w = 0; w < _lotLength; w++)
             {
                 // this is a panel we need to activate and move
-                if (w >= _posZOffset && w < (_posZOffset + _updateWidth))
+                if (w >= _posZOffset && w < (_posZOffset + _updateLength))
                 {
                     // Check opposite length and offset for reposition
                     _panelList[(h * _lotLength) + w].SetStatus(true);
@@ -187,7 +187,7 @@ public static class BuildingCreationKit
     }
 
 
-    // Left face
+    // NegX face
     public static void UpdateNegXPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
         int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
     {
@@ -196,18 +196,98 @@ public static class BuildingCreationKit
             for (int w = 0; w < _lotLength; w++)
             {
                 // this is a panel we need to activate and move
-                if (w >= _posZOffset && w < (_posZOffset + _updateWidth))
+                if (w >= _posZOffset && w < (_posZOffset + _updateLength))
                 {
                     // Check opposite length and offset for reposition
                     _panelList[(h * _lotLength) + w].SetStatus(true);
 
                     Vector3 newPos = _panelList[h * _lotLength + w].Position();
 
-                    float updateX = (newPos.x - _lotWidth) + (_posXOffset + _updateWidth);
+                    float updateX = newPos.x + _posXOffset;
 
                     newPos.x = updateX;
 
                     _panelList[h * _lotLength + w].SetPosition(newPos);
+                }
+            }
+        }
+    }
+
+
+    // posZ face
+    public static void UpdatePosZPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
+        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    {
+        for (int h = 0; h < _updateHeight; h++)
+        {
+            for (int w = 0; w < _lotWidth; w++)
+            {
+                // this is a panel we need to activate and move
+                if (w >= _posXOffset && w < (_posXOffset + _updateWidth))
+                {
+                    // Check opposite length and offset for reposition
+                    _panelList[(h * _lotWidth) + w].SetStatus(true);
+
+                    Vector3 newPos = _panelList[h * _lotWidth + w].Position();
+
+                    float updateZ = (newPos.z - _lotLength) + (_posZOffset + _updateLength);
+
+                    newPos.z = updateZ;
+
+                    _panelList[h * _lotWidth + w].SetPosition(newPos);
+                }
+            }
+        }
+    }
+
+
+    // posZ face
+    public static void UpdateNegZPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
+        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    {
+        for (int h = 0; h < _updateHeight; h++)
+        {
+            for (int w = 0; w < _lotWidth; w++)
+            {
+                // this is a panel we need to activate and move
+                if (w >= _posXOffset && w < (_posXOffset + _updateWidth))
+                {
+                    // Check opposite length and offset for reposition
+                    _panelList[(h * _lotWidth) + w].SetStatus(true);
+
+                    Vector3 newPos = _panelList[h * _lotWidth + w].Position();
+
+                    float updateZ = newPos.z + _posZOffset;
+
+                    newPos.z = updateZ;
+
+                    _panelList[h * _lotWidth + w].SetPosition(newPos);
+                }
+            }
+        }
+    }
+
+
+    // posY face (Roof)
+    public static void UpdatePosYPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
+        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    {
+        for (int h = 0; h < _lotLength; h++)
+        {
+            for (int w = 0; w < _lotWidth; w++)
+            {
+                // this is a panel we need to activate and move
+                if (w >= _posXOffset && w < (_posXOffset + _updateWidth) &&
+                    h >= _posZOffset && h < (_posZOffset + _updateLength))
+                {
+                    // Check opposite length and offset for reposition
+                    _panelList[(h * _lotWidth) + w].SetStatus(true);
+
+                    Vector3 newPos = _panelList[h * _lotWidth + w].Position();
+
+                    newPos.y = _updateHeight;
+
+                    _panelList[h * _lotWidth + w].SetPosition(newPos);
                 }
             }
         }

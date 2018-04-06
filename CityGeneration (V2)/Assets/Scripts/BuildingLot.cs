@@ -110,8 +110,8 @@ public class BuildingLot : MonoBehaviour
             buildingPanels.Add(posXPanels);
 
 
-            pos = transform.position + new Vector3(lotWidthUpdated - (float)panelSize,
-                ((float)panelSize / 2), lotLengthUpdated - ((float)panelSize / 2));
+            pos = transform.position + new Vector3((float)panelSize, ((float)panelSize / 2),
+                lotLengthUpdated - ((float)panelSize / 2));
 
             posZPanels = BuildingCreationKit.GeneratePosZList(((int)lotWidthUpdated - panelSize),
                 mainBuildingHeight, pos);
@@ -120,7 +120,7 @@ public class BuildingLot : MonoBehaviour
 
 
             pos = transform.position + new Vector3(((float)panelSize / 2), ((float)panelSize / 2),
-                lotLengthUpdated - panelSize);
+                (float)panelSize);
 
             negXPanels = BuildingCreationKit.GenerateNegXList(((int)lotLengthUpdated - panelSize),
                 mainBuildingHeight, pos);
@@ -151,7 +151,17 @@ public class BuildingLot : MonoBehaviour
                 ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
                 mainBuildingWidth, posXOffset, posZOffset);
 
-            Debug.Log(mainBuildingWidth + posXOffset);
+            BuildingCreationKit.UpdatePosZPanelList(posZPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
+
+            BuildingCreationKit.UpdateNegZPanelList(negZPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
+
+            BuildingCreationKit.UpdatePosYPanelList(posYPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
 
             // GenerateMutations();
 
