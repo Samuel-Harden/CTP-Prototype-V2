@@ -20,7 +20,7 @@ public static class BuildingCreationKit
         {
             for (int w = 0; w < _faceWidth; w++)
             {
-                var panel = new Panel(h, w, true, pos, rot);
+                var panel = new Panel(h, w, false, pos, rot);
 
                 panels.Add(panel);
 
@@ -47,7 +47,7 @@ public static class BuildingCreationKit
         {
             for (int w = 0; w < _faceWidth; w++)
             {
-                var panel = new Panel(h, w, true, pos, rot);
+                var panel = new Panel(h, w, false, pos, rot);
 
                 panels.Add(panel);
 
@@ -74,7 +74,7 @@ public static class BuildingCreationKit
         {
             for (int w = 0; w < _faceWidth; w++)
             {
-                var panel = new Panel(h, w, true, pos, rot);
+                var panel = new Panel(h, w, false, pos, rot);
 
                 panels.Add(panel);
 
@@ -101,7 +101,7 @@ public static class BuildingCreationKit
         {
             for (int w = 0; w < _faceWidth; w++)
             {
-                var panel = new Panel(h, w, true, pos, rot);
+                var panel = new Panel(h, w, false, pos, rot);
 
                 panels.Add(panel);
 
@@ -128,7 +128,7 @@ public static class BuildingCreationKit
         {
             for (int w = 0; w < _faceWidth; w++)
             {
-                var panel = new Panel(h, w, true, pos, rot);
+                var panel = new Panel(h, w, false, pos, rot);
 
                 panels.Add(panel);
 
@@ -140,5 +140,76 @@ public static class BuildingCreationKit
         }
 
         return panels;
+    }
+
+
+    public static void ClearUnusedPanels(List<List<Panel>> _buildingPanels)
+    {
+        // Loop through each list for each face
+        for (int i = 0; i < _buildingPanels.Count; i++)
+        {
+            // Reverse iterate (as we may need to remove entry)
+            for (int j = _buildingPanels[i].Count - 1; j >= 0; j--)
+            {
+                // Remove unused building panel
+                if (!_buildingPanels[i][j].PanelStatus())
+                {
+                    _buildingPanels[i].RemoveAt(j);
+                }
+            }
+        }
+    }
+
+    // Right face
+    public static void UpdatePosXPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
+        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    {
+        for (int h = 0; h < _updateHeight; h++)
+        {
+            for (int w = 0; w < _lotLength; w++)
+            {
+                // this is a panel we need to activate and move
+                if (w >= _posZOffset && w < (_posZOffset + _updateWidth))
+                {
+                    // Check opposite length and offset for reposition
+                    _panelList[(h * _lotLength) + w].SetStatus(true);
+
+                    Vector3 newPos = _panelList[h * _lotLength + w].Position();
+
+                    float updateX = (newPos.x - _lotWidth) + (_posXOffset + _updateWidth);
+
+                    newPos.x = updateX;
+
+                    _panelList[h * _lotLength + w].SetPosition(newPos);
+                }
+            }
+        }
+    }
+
+
+    // Left face
+    public static void UpdateNegXPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
+        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    {
+        for (int h = 0; h < _updateHeight; h++)
+        {
+            for (int w = 0; w < _lotLength; w++)
+            {
+                // this is a panel we need to activate and move
+                if (w >= _posZOffset && w < (_posZOffset + _updateWidth))
+                {
+                    // Check opposite length and offset for reposition
+                    _panelList[(h * _lotLength) + w].SetStatus(true);
+
+                    Vector3 newPos = _panelList[h * _lotLength + w].Position();
+
+                    float updateX = (newPos.x - _lotWidth) + (_posXOffset + _updateWidth);
+
+                    newPos.x = updateX;
+
+                    _panelList[h * _lotLength + w].SetPosition(newPos);
+                }
+            }
+        }
     }
 }

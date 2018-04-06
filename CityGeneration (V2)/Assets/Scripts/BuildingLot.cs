@@ -93,12 +93,13 @@ public class BuildingLot : MonoBehaviour
     {
         if (division > buildDepth)
         {
-            GenerateBuildingMain();
-
             buildingPanels = new List<List<Panel>>();
 
             // here is where the data for each face is made, once this is complete, panels
             // can be enabled to generate desired building shape
+
+            // Get main building data first
+            GenerateBuildingMain();
 
             Vector3 pos = transform.position + new Vector3(lotWidthUpdated - ((float)panelSize / 2),
                 ((float)panelSize / 2), (float)panelSize);
@@ -140,6 +141,21 @@ public class BuildingLot : MonoBehaviour
             posYPanels = BuildingCreationKit.GeneratePosYList(((int)lotWidthUpdated - panelSize),
                 ((int)lotLengthUpdated - panelSize), pos);
             buildingPanels.Add(posYPanels);
+
+
+            BuildingCreationKit.UpdatePosXPanelList(posXPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
+
+            BuildingCreationKit.UpdateNegXPanelList(negXPanels, ((int)lotLengthUpdated - 1),
+                ((int)lotWidthUpdated - 1), mainBuildingHeight, mainBuildingLength,
+                mainBuildingWidth, posXOffset, posZOffset);
+
+            Debug.Log(mainBuildingWidth + posXOffset);
+
+            // GenerateMutations();
+
+            BuildingCreationKit.ClearUnusedPanels(buildingPanels);
         }
     }
 
