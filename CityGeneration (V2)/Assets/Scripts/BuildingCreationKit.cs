@@ -7,143 +7,168 @@ public static class BuildingCreationKit
     private const int panelSize = 1;
 
 
-    // Generates a list for each face of building
-    public static List<Panel> GenerateNegXList(int _faceWidth, int _faceHeight, Vector3 _startPos)
+    public static void GenerateBuilding(BuildingLot _lot)
     {
-        List<Panel> panels = new List<Panel>();
+        GenerateMain(_lot);
 
+        //Identify sides for mutations
+        // Mutate!!!
+        // remove duplicates!
+    }
+
+
+    private static void GenerateMain(BuildingLot _lot)
+    {
+        // PosX
+        Vector3 pos = _lot.transform.position + new Vector3((_lot.GetPosXOffset() + _lot.GetPosZWidth()) +
+            (float)panelSize / 2, ((float)panelSize / 2), _lot.GetPosZOffset() + panelSize);
+
+        GeneratePosXPanels(_lot, pos); //gold
+
+        // PosZ
+        pos = _lot.transform.position + new Vector3(_lot.GetPosXOffset() + panelSize, ((float)panelSize / 2),
+            (_lot.GetPosZOffset() + _lot.GetPosXWidth()) + (float)panelSize / 2);
+
+        GeneratePosZPanels(_lot, pos); 
+
+        // NegX
+        pos = _lot.transform.position + new Vector3(_lot.GetPosXOffset() + ((float)panelSize / 2),
+            ((float)panelSize / 2), _lot.GetPosZOffset() + panelSize);
+
+        GenerateNegXPanels(_lot, pos);
+
+        // NegZ
+        pos = _lot.transform.position + new Vector3(_lot.GetPosXOffset() + panelSize, ((float)panelSize / 2),
+            _lot.GetPosZOffset() + ((float)panelSize / 2));
+
+        GenerateNegZPanels(_lot, pos);
+
+        // PosY
+        pos = _lot.transform.position + new Vector3(_lot.GetPosXOffset() + panelSize,
+            _lot.GetCurrentBuildingHeight(), _lot.GetPosZOffset() + panelSize);
+
+        GeneratePosYPanels(_lot, pos);
+    }
+
+
+    // Generates a list for each face of building
+    public static void GenerateNegXPanels(BuildingLot _lot, Vector3 _startPos)
+    {
         Vector3 pos = _startPos;
 
         Vector3 rot = new Vector3(90.0f, 270.0f, 0.0f);
 
-        for (int h = 0; h < _faceHeight; h++)
+        for (int h = 0; h < _lot.GetCurrentBuildingHeight(); h++)
         {
-            for (int w = 0; w < _faceWidth; w++)
+            for (int w = 0; w < _lot.GetNegXWidth(); w++)
             {
                 var panel = new Panel(h, w, false, pos, rot);
 
-                panels.Add(panel);
+                _lot.GetBuildingPanels().Add(panel);
 
                 pos.z += panelSize;
             }
 
-            pos.z -= _faceWidth;
+            pos.z -= _lot.GetNegXWidth();
             pos.y += panelSize;
         }
-
-        return panels;
     }
 
 
-    public static List<Panel> GeneratePosXList(int _faceWidth, int _faceHeight, Vector3 _startPos)
+    public static void GeneratePosXPanels(BuildingLot _lot, Vector3 _startPos)
     {
-        List<Panel> panels = new List<Panel>();
-
         Vector3 pos = _startPos;
 
         Vector3 rot = new Vector3(90.0f, 90.0f, 0.0f);
 
-        for (int h = 0; h < _faceHeight; h++)
+        for (int h = 0; h < _lot.GetCurrentBuildingHeight(); h++)
         {
-            for (int w = 0; w < _faceWidth; w++)
+            for (int w = 0; w < _lot.GetPosXWidth(); w++)
             {
                 var panel = new Panel(h, w, false, pos, rot);
 
-                panels.Add(panel);
+                _lot.GetBuildingPanels().Add(panel);
 
                 pos.z += panelSize;
             }
 
-            pos.z -= _faceWidth;
+            pos.z -= _lot.GetPosXWidth();
             pos.y += panelSize;
         }
-
-        return panels;
     }
 
 
-    public static List<Panel> GeneratePosZList(int _faceWidth, int _faceHeight, Vector3 _startPos)
+    public static void GeneratePosZPanels(BuildingLot _lot, Vector3 _startPos)
     {
-        List<Panel> panels = new List<Panel>();
-
         Vector3 pos = _startPos;
 
         Vector3 rot = new Vector3(90.0f, 0.0f, 0.0f);
 
-        for (int h = 0; h < _faceHeight; h++)
+        for (int h = 0; h < _lot.GetCurrentBuildingHeight(); h++)
         {
-            for (int w = 0; w < _faceWidth; w++)
+            for (int w = 0; w < _lot.GetPosZWidth(); w++)
             {
                 var panel = new Panel(h, w, false, pos, rot);
 
-                panels.Add(panel);
+                _lot.GetBuildingPanels().Add(panel);
 
                 pos.x += panelSize;
             }
 
-            pos.x -= _faceWidth;
+            pos.x -= _lot.GetPosZWidth();
             pos.y += panelSize;
         }
-
-        return panels;
     }
 
 
-    public static List<Panel> GenerateNegZList(int _faceWidth, int _faceHeight, Vector3 _startPos)
+    public static void GenerateNegZPanels(BuildingLot _lot, Vector3 _startPos)
     {
-        List<Panel> panels = new List<Panel>();
-
         Vector3 pos = _startPos;
 
         Vector3 rot = new Vector3(90.0f, 180f, 0.0f);
 
-        for (int h = 0; h < _faceHeight; h++)
+        for (int h = 0; h < _lot.GetCurrentBuildingHeight(); h++)
         {
-            for (int w = 0; w < _faceWidth; w++)
+            for (int w = 0; w < _lot.GetNegZWidth(); w++)
             {
                 var panel = new Panel(h, w, false, pos, rot);
 
-                panels.Add(panel);
+                _lot.GetBuildingPanels().Add(panel);
 
                 pos.x += panelSize;
             }
 
-            pos.x -= _faceWidth;
+            pos.x -= _lot.GetNegZWidth();
             pos.y += panelSize;
         }
-
-        return panels;
     }
 
 
-    public static List<Panel> GeneratePosYList(int _faceWidth, int _faceHeight, Vector3 _startPos)
+    public static void GeneratePosYPanels(BuildingLot _lot, Vector3 _startPos)
     {
-        List<Panel> panels = new List<Panel>();
-
         Vector3 pos = _startPos;
 
         Vector3 rot = Vector3.zero;
 
-        for (int h = 0; h < _faceHeight; h++)
+        for (int h = 0; h < _lot.GetCurrentBuildingLength(); h++)
         {
-            for (int w = 0; w < _faceWidth; w++)
+            for (int w = 0; w < _lot.GetCurrentBuildingWidth(); w++)
             {
                 var panel = new Panel(h, w, false, pos, rot);
 
-                panels.Add(panel);
+                _lot.GetBuildingPanels().Add(panel);
 
                 pos.x += panelSize;
             }
 
-            pos.x -= _faceWidth;
+            pos.x -= _lot.GetCurrentBuildingWidth();
             pos.z += panelSize;
         }
-
-        return panels;
     }
 
 
-    public static void ClearUnusedPanels(List<List<Panel>> _buildingPanels)
+    // Needs updating to compare both lists and remove duplicates
+    public static void ClearDuplicatePanels(List<List<Panel>> _buildingPanels)
     {
         // Loop through each list for each face
         for (int i = 0; i < _buildingPanels.Count; i++)
@@ -161,30 +186,22 @@ public static class BuildingCreationKit
     }
 
 
-    public static void UpdateAllLists(List<Panel> _posXPanels, List<Panel> _negXPanels, List<Panel> _posZPanels, 
-        List<Panel> _negZPanels, List<Panel> _posYPanels, int _lotLength, int _lotWidth,
-        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    /*public static void UpdateAllLists(BuildingLot _lot)
     {
-        UpdatePosXPanelList(_posXPanels, _lotLength, _lotWidth, _updateHeight,
-            _updateLength, _updateWidth, _posXOffset, _posZOffset);
+        UpdatePosXPanelList(_lot);
 
-        UpdateNegXPanelList(_negXPanels, _lotLength, _lotWidth, _updateHeight,
-            _updateLength, _updateWidth, _posXOffset, _posZOffset);
+        UpdateNegXPanelList(_lot);
 
-        UpdatePosZPanelList(_posZPanels, _lotLength, _lotWidth, _updateHeight,
-            _updateLength, _updateWidth, _posXOffset, _posZOffset);
+        UpdatePosZPanelList(_lot);
 
-        UpdateNegZPanelList(_negZPanels, _lotLength, _lotWidth, _updateHeight,
-            _updateLength, _updateWidth, _posXOffset, _posZOffset);
+        UpdateNegZPanelList(_lot);
 
-        UpdatePosYPanelList(_posYPanels, _lotLength, _lotWidth, _updateHeight,
-            _updateLength, _updateWidth, _posXOffset, _posZOffset);
-    }
+        UpdatePosYPanelList(_lot);
+    }*/
 
 
-    // PosX face
-    public static void UpdatePosXPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
-        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    /*// PosX face
+    public static void UpdatePosXPanelList(BuildingLot _lot)
     {
         for (int h = 0; h < _updateHeight; h++)
         {
@@ -210,8 +227,7 @@ public static class BuildingCreationKit
 
 
     // NegX face
-    public static void UpdateNegXPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
-        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    public static void UpdateNegXPanelList(BuildingLot _lot)
     {
         for (int h = 0; h < _updateHeight; h++)
         {
@@ -237,8 +253,7 @@ public static class BuildingCreationKit
 
 
     // posZ face
-    public static void UpdatePosZPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
-        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    public static void UpdatePosZPanelList(BuildingLot _lot)
     {
         for (int h = 0; h < _updateHeight; h++)
         {
@@ -264,8 +279,7 @@ public static class BuildingCreationKit
 
 
     // posZ face
-    public static void UpdateNegZPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
-        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    public static void UpdateNegZPanelList(BuildingLot _lot)
     {
         for (int h = 0; h < _updateHeight; h++)
         {
@@ -291,8 +305,7 @@ public static class BuildingCreationKit
 
 
     // posY face (Roof)
-    public static void UpdatePosYPanelList(List<Panel> _panelList, int _lotLength, int _lotWidth,
-        int _updateHeight, int _updateLength, int _updateWidth, int _posXOffset, int _posZOffset)
+    public static void UpdatePosYPanelList(BuildingLot _lot)
     {
         for (int h = 0; h < _lotLength; h++)
         {
@@ -313,11 +326,170 @@ public static class BuildingCreationKit
                 }
             }
         }
+    }*/
+
+
+    public static void SetMutations(BuildingLot _lot)
+    {
+        // Find out how many mutations this building can have
+        // (max 1 for each size)
+        
+        if (MutationNegX(_lot))
+            _lot.GetMutationList().Add(0); // NegX
+
+        if (MutationPosX(_lot))
+            _lot.GetMutationList().Add(1); // PosX
+
+        if (MutationNegZ(_lot))
+            _lot.GetMutationList().Add(2); // NegZ
+
+        if (MutationPosZ(_lot))
+            _lot.GetMutationList().Add(3); // PosZ
+
+        Debug.Log("Building Max Mutations: " + _lot.GetMutationList().Count);
+
+        //pass through how many possible mutations,
+        // Randomly set no of mutations for building
+        // randomly choose face to mutate, check if possible? if so apply change
+        if (_lot.GetMutationList().Count > 0) // Cant mutation a building with no room!
+            ApplyMutations(_lot);
     }
 
 
-    public static void GenerateMutations(BuildingLot _lot)
+    private static void ApplyMutations(BuildingLot _lot)
     {
+        int maxMutations = 0;
 
+        //int maxMutations = (int)Random.Range(0, _lot.GetMutationList().Count + 1);
+
+        if (_lot.GetMutationList().Count > 0) // JUST SET TO 1 FOR TESTING
+            maxMutations = 1;
+
+        //Debug.Log("Chosen No mutations : " + maxMutations);
+
+        // Randomly choose face
+        int ID = (int)Random.Range(0, _lot.GetMutationList().Count);
+
+        int direction = _lot.GetMutationList()[ID];
+
+        int counter = 0;
+
+        while (counter < maxMutations)
+        {
+            DirectMutation(_lot, direction);
+            counter++;
+        }
+    }
+
+
+    private static void DirectMutation(BuildingLot _lot, int _direction)
+    {
+        // NegX = 0
+        // PosX = 1
+        // NegZ = 2
+        // PosZ = 3
+
+        switch (_direction)
+        {
+            case 0:
+                GenerateNegXMutation(_lot);
+                break;
+            case 1:
+                //GeneratePosXMutation(_lot);
+                break;
+            case 2:
+                GenerateNegZMutation(_lot);
+                break;
+            case 3:
+                GeneratePosZMutation(_lot);
+                break;
+        }
+    }
+
+
+    private static void GenerateNegXMutation(BuildingLot _lot)
+    {
+        //Debug.Log("Gen NegX Mutation");
+    }
+
+
+    /*private static void GeneratePosXMutation(BuildingLot _lot)
+    {
+         Debug.Log("Gen posX Mutation");
+
+        // set a new height, set new width set new length
+        // Calculate size of mutation
+
+        int newHeight = (int)_lot.GetCurrentBuildingHeight() / 2;
+
+        newHeight = (int)Random.Range(newHeight, _lot.GetCurrentBuildingHeight() - 1);
+
+        Debug.Log("Height: " + newHeight);
+
+        int newWidth = (int)Random.Range(1, (_lot.GetLotWidth() - (_lot.GetPosXOffset() + _lot.GetCurrentBuildingWidth())));
+
+        Debug.Log("Width: " + newWidth);
+
+        int newLength = (int)Random.Range(1, _lot.GetCurrentBuildingLength());
+
+        Debug.Log("Length: " + newLength);
+
+        UpdateAllLists(_lot);
+    }*/
+
+
+    private static void GenerateNegZMutation(BuildingLot _lot)
+    {
+        //Debug.Log("Gen NegZ Mutation");
+    }
+
+
+    private static void GeneratePosZMutation(BuildingLot _lot)
+    {
+        //Debug.Log("Gen PosZ Mutation");
+    }
+
+
+    private static bool MutationNegX(BuildingLot _lot)
+    {
+        if (_lot.GetPosXOffset() != 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private static bool MutationPosX(BuildingLot _lot)
+    {
+        if (_lot.GetPosXOffset() + _lot.GetCurrentBuildingWidth() < _lot.GetLotWidth())
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private static bool MutationNegZ(BuildingLot _lot)
+    {
+        if (_lot.GetPosZOffset() != 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private static bool MutationPosZ(BuildingLot _lot)
+    {
+        if (_lot.GetPosZOffset() + _lot.GetCurrentBuildingLength() < _lot.GetLotLength())
+        {
+            return true;
+        }
+
+        return false;
     }
 }

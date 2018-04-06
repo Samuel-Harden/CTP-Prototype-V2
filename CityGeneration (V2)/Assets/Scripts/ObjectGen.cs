@@ -55,30 +55,27 @@ public class ObjectGen : MonoBehaviour
 
                 Vector3 newPos = lot.transform.position;
 
-                newPos.x += lot.WidthUpdated() / 2;
-                newPos.z += lot.LengthUpdated() / 2;
+                newPos.x += lot.GetLotWidth() / 2;
+                newPos.z += lot.GetLotLength() / 2;
 
-                newPos.y += (lot.GetMainBuildingHeight() / 2);
+                newPos.y += (lot.GetMaxBuildingHeight() / 2);
 
                 buildingRoot.transform.position = newPos;
 
                 // loop through panels for each face of building
-                for (int i = 0; i < lot.GetBuildingPanelList().Count; i++)
+                for (int i = 0; i < lot.GetBuildingPanels().Count; i++)
                 {
-                    for (int j = 0; j < lot.GetBuildingPanels(i).Count; j++)
+                    if (lot.GetBuildingPanel(i) != null)
                     {
-                        if (lot.GetBuildingPanel(i, j) != null)
-                        {
-                            var panel = planeMesh.GeneratePlane(planeMeshPrefab, panelSize, panelSize);
+                        var panel = planeMesh.GeneratePlane(planeMeshPrefab, panelSize, panelSize);
 
-                            panel.transform.eulerAngles = lot.GetBuildingPanel(i, j).Rotation();
+                        panel.transform.eulerAngles = lot.GetBuildingPanel(i).Rotation();
 
-                            panel.transform.position = lot.GetBuildingPanel(i, j).Position();
+                        panel.transform.position = lot.GetBuildingPanel(i).Position();
 
-                            SetTexture(panel);
+                        SetTexture(panel);
 
-                            panel.transform.parent = buildingRoot.transform;
-                        }
+                        panel.transform.parent = buildingRoot.transform;
                     }
                 }
 
@@ -87,6 +84,10 @@ public class ObjectGen : MonoBehaviour
 
                 // now all panels have been merged, we can apply a texture to the mesh
                 SetTexture(buildingRoot);
+
+                newPos.y += roadHeight;
+
+                buildingRoot.transform.position = newPos;
 
                 buildingRoot.transform.parent = buildingContainer.transform;
             }
@@ -98,12 +99,12 @@ public class ObjectGen : MonoBehaviour
     {
         foreach (BuildingLot lot in _lots)
         {
-            var path = planeMesh.GeneratePlane(planeMeshPrefab, lot.WidthUpdated(), lot.LengthUpdated());
+            var path = planeMesh.GeneratePlane(planeMeshPrefab, lot.GetLotWidth(), lot.GetLotLength());
 
             Vector3 pos = lot.transform.position;
 
-            pos.x += lot.WidthUpdated() / 2;
-            pos.z += lot.LengthUpdated() / 2;
+            pos.x += lot.GetLotWidth() / 2;
+            pos.z += lot.GetLotLength() / 2;
             pos.y = roadHeight;
 
             path.transform.position = pos;

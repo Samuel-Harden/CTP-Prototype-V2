@@ -30,23 +30,25 @@ public class BuildingLot : MonoBehaviour
     private int minBuildingSize = 2;
 
     // The panels that make up the building
-    private List<List<Panel>> buildingPanels;
-    private List<Panel> posXPanels;
-    private List<Panel> posZPanels;
-    private List<Panel> negXPanels;
-    private List<Panel> negZPanels;
-    private List<Panel> posYPanels;
+    private List<Panel> buildingPanels;
 
     private List<int> mutationDirections;
 
-    private int posXOffset;
-    private int posZOffset;
+    private int offsetX;
+    private int offsetZ;
 
-    private int mainBuildingWidth;
-    private int mainBuildingLength;
+    private int buildingWidth;
+    private int buildingLength;
+    private int buildingHeight;
 
-    private int mainBuildingHeight;
-    private int currentMutationHeight;
+    private int maxBuildingHeight;
+
+    // The Length of each face
+    // needed for mutations
+    private int posXWidth;
+    private int negXWidth;
+    private int posZWidth;
+    private int negZWidth;
 
     private Color myColor = Color.red;
 
@@ -85,7 +87,7 @@ public class BuildingLot : MonoBehaviour
         transform.position = updatedPos;
 
         lotLengthUpdated = lotLength - tileSize;
-        lotWidthUpdated  = lotWidth  - tileSize;
+        lotWidthUpdated = lotWidth - tileSize;
     }
 
 
@@ -93,90 +95,51 @@ public class BuildingLot : MonoBehaviour
     {
         if (division > buildDepth)
         {
-            buildingPanels = new List<List<Panel>>();
-
-            // here is where the data for each face is made, once this is complete, panels
-            // can be enabled to generate desired building shape
-
             // Get main building data first
-            GenerateBuildingMain();
-
-            Vector3 pos = transform.position + new Vector3(lotWidthUpdated - ((float)panelSize / 2),
-                ((float)panelSize / 2), (float)panelSize);
-
-            posXPanels = BuildingCreationKit.GeneratePosXList(((int)lotLengthUpdated - panelSize),
-                mainBuildingHeight, pos);
-
-            buildingPanels.Add(posXPanels);
-
-
-            pos = transform.position + new Vector3((float)panelSize, ((float)panelSize / 2),
-                lotLengthUpdated - ((float)panelSize / 2));
-
-            posZPanels = BuildingCreationKit.GeneratePosZList(((int)lotWidthUpdated - panelSize),
-                mainBuildingHeight, pos);
-
-            buildingPanels.Add(posZPanels);
-
-
-            pos = transform.position + new Vector3(((float)panelSize / 2), ((float)panelSize / 2),
-                (float)panelSize);
-
-            negXPanels = BuildingCreationKit.GenerateNegXList(((int)lotLengthUpdated - panelSize),
-                mainBuildingHeight, pos);
-
-            buildingPanels.Add(negXPanels);            
-
-
-            pos = transform.position + new Vector3((float)panelSize, ((float)panelSize / 2),
-                ((float)panelSize / 2));
-
-            negZPanels = BuildingCreationKit.GenerateNegZList(((int)lotWidthUpdated - panelSize),
-                mainBuildingHeight, pos);
-
-            buildingPanels.Add(negZPanels);
-
-            pos = transform.position + new Vector3((float)panelSize, mainBuildingHeight, (float)panelSize);
-
-            posYPanels = BuildingCreationKit.GeneratePosYList(((int)lotWidthUpdated - panelSize),
-                ((int)lotLengthUpdated - panelSize), pos);
-            buildingPanels.Add(posYPanels);
-
-
-            BuildingCreationKit.UpdateAllLists(posXPanels, negXPanels, posZPanels, negZPanels, posYPanels,
-                ((int)lotLengthUpdated - 1), ((int)lotWidthUpdated - 1), mainBuildingHeight,
-                mainBuildingLength, mainBuildingWidth, posXOffset, posZOffset);
-
-            BuildingCreationKit.GenerateMutations(this);
-
-            BuildingCreationKit.ClearUnusedPanels(buildingPanels);
+            GenerateBuilding();
         }
     }
 
 
-    private void GenerateBuildingMain()
+    private void GenerateBuilding()
     {
+        // Possibly add a rest here, then you could just call this to regen a building
+
+        // ALL THIS BELOW COULD AND SHOULD GO INTO THE BUILDING CREATION KIT!!!
+
+        buildingPanels = new List<Panel>();
+
+        mutationDirections = new List<int>();
+
         // Scale min building size to == half the size of the lot
         int baseBuildingSizeX = (int)(lotWidthUpdated - 1) / 2;
         int baseBuildingSizeZ = (int)(lotLengthUpdated - 1) / 2;
 
         // Size
-        mainBuildingWidth  = Random.Range(baseBuildingSizeX, ((int)lotWidthUpdated));
-        mainBuildingLength = Random.Range(baseBuildingSizeZ, ((int)lotLengthUpdated));
+        buildingWidth = Random.Range(baseBuildingSizeX, ((int)lotWidthUpdated));
+        buildingLength = Random.Range(baseBuildingSizeZ, ((int)lotLengthUpdated));
 
         //stops buildings being 1 wide or 1 length, and set it to min if too small
-        if (mainBuildingWidth < minBuildingSize)
-            mainBuildingWidth = minBuildingSize;
+        if (buildingWidth < minBuildingSize)
+            buildingWidth = minBuildingSize;
 
-        if (mainBuildingLength < minBuildingSize)
-            mainBuildingLength = minBuildingSize;
+        if (buildingLength < minBuildingSize)
+            buildingLength = minBuildingSize;
 
         // Set positional offset, so that not all buildings are central to their lot
-        posXOffset = Random.Range(0, ((int)lotWidthUpdated - 1) - mainBuildingWidth);
-        posZOffset = Random.Range(0, ((int)lotLengthUpdated - 1) - mainBuildingLength);
+        offsetX = Random.Range(0, ((int)lotWidthUpdated) - buildingWidth);
+        offsetZ = Random.Range(0, ((int)lotLengthUpdated) - buildingLength);
+
+        posXWidth = buildingLength;
+        negXWidth = buildingLength;
+        posZWidth = buildingWidth;
+        negZWidth = buildingWidth;
 
         // Set Height
-        mainBuildingHeight = mainBuildingLength + mainBuildingWidth * 2;
+        buildingHeight = buildingLength + buildingWidth * 2;
+        maxBuildingHeight = buildingHeight;
+
+        BuildingCreationKit.GenerateBuilding(this);
     }
 
 
@@ -192,7 +155,7 @@ public class BuildingLot : MonoBehaviour
             {
                 counter++;
 
-                if(counter > divideCount)
+                if (counter > divideCount)
                 {
                     // if this lot has a pos in its bounds, we need to divide
                     divided = true;
@@ -221,7 +184,7 @@ public class BuildingLot : MonoBehaviour
         int count = 0;
 
         // Check if Lot needs an Offset
-        offsetWidth  = Offset(lotWidth, _tileSize);
+        offsetWidth = Offset(lotWidth, _tileSize);
         offsetLength = Offset(lotLength, _tileSize);
 
         // Order (Bottom left, Bottom right, Top left, Top right)
@@ -312,27 +275,129 @@ public class BuildingLot : MonoBehaviour
     }
 
 
-    public List<List<Panel>> GetBuildingPanelList()
+    public int GetPosXWidth()
+    {
+        return posXWidth;
+    }
+
+
+    public void SetPosXWidth(int _width)
+    {
+        posXWidth = _width;
+    }
+
+
+    public int GetNegXWidth()
+    {
+        return negXWidth;
+    }
+
+
+    public void SetNegXWidth(int _width)
+    {
+        negXWidth = _width;
+    }
+
+
+    public int GetPosZWidth()
+    {
+        return posZWidth;
+    }
+
+
+    public void SetPosZWidth(int _width)
+    {
+        posZWidth = _width;
+    }
+
+
+    public int GetNegZWidth()
+    {
+        return negZWidth;
+    }
+
+
+    public void SetNegZWidth(int _width)
+    {
+        negZWidth = _width;
+    }
+
+
+    public List<Panel> GetBuildingPanels()
     {
         return buildingPanels;
     }
 
 
-    public List<Panel> GetBuildingPanels(int _index)
+    public Panel GetBuildingPanel(int _index)
     {
         return buildingPanels[_index];
     }
 
 
-    public Panel GetBuildingPanel(int _listIndex, int _index)
+    public void SetBuildingHeight(int _height)
     {
-        return buildingPanels[_listIndex][_index];
+        buildingHeight = _height;
     }
 
 
-    public float GetMainBuildingHeight()
+    public List<int> GetMutationList()
     {
-        return mainBuildingHeight;
+        return mutationDirections;
+    }
+
+
+    public int GetMaxBuildingHeight()
+    {
+        return maxBuildingHeight;
+    }
+
+
+    public int GetPosXOffset()
+    {
+        return offsetX;
+    }
+
+
+    public int GetPosZOffset()
+    {
+        return offsetZ;
+    }
+
+
+    public float GetCurrentBuildingWidth()
+    {
+        return buildingWidth;
+    }
+
+
+    public float GetCurrentBuildingLength()
+    {
+        return buildingLength;
+    }
+
+
+    public float GetCurrentBuildingHeight()
+    {
+        return buildingHeight;
+    }
+
+
+    public void SetCurrentBuildingHeight(int _height)
+    {
+        buildingHeight = _height;
+    }
+
+
+    public float GetLotWidth()
+    {
+        return lotWidthUpdated;
+    }
+
+
+    public float GetLotLength()
+    {
+        return lotLengthUpdated;
     }
 
 
@@ -351,17 +416,6 @@ public class BuildingLot : MonoBehaviour
     public float Length()
     {
         return lotLength;
-    }
-
-    public float LengthUpdated()
-    {
-        return lotLengthUpdated;
-    }
-
-
-    public float WidthUpdated()
-    {
-        return lotWidthUpdated;
     }
 
 
