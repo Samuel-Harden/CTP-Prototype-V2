@@ -353,9 +353,21 @@ public class BuildingLot : MonoBehaviour
     }
 
 
+    public void SetPosXOffset(int _offset)
+    {
+        offsetX = _offset;
+    }
+
+
     public int GetPosZOffset()
     {
         return offsetZ;
+    }
+
+
+    public void SetPosZOffset(int _offset)
+    {
+        offsetZ = _offset;
     }
 
 
