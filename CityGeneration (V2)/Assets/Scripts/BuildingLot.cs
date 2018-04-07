@@ -335,12 +335,6 @@ public class BuildingLot : MonoBehaviour
     }
 
 
-    public void SetBuildingHeight(int _height)
-    {
-        buildingHeight = _height;
-    }
-
-
     public List<int> GetMutationList()
     {
         return mutationDirections;
@@ -349,7 +343,7 @@ public class BuildingLot : MonoBehaviour
 
     public int GetMaxBuildingHeight()
     {
-        return maxBuildingHeight;
+        return maxBuildingHeight; // height of main buulding section
     }
 
 
