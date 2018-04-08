@@ -107,6 +107,17 @@ public class BuildingLot : MonoBehaviour
 
         // ALL THIS BELOW COULD AND SHOULD GO INTO THE BUILDING CREATION KIT!!!
 
+        // add offset for paths
+        Vector3 pos = transform.position;
+        pos.x += (float)panelSize / 2;
+        pos.y += (float)panelSize / 2;
+        pos.z += (float)panelSize / 2;
+
+        lotWidthUpdated -= panelSize;
+        lotLengthUpdated -= panelSize;
+
+        transform.position = pos;
+
         buildingPanels = new List<Panel>();
 
         mutationDirections = new List<int>();
@@ -127,8 +138,8 @@ public class BuildingLot : MonoBehaviour
             buildingLength = minBuildingSize;
 
         // Set positional offset, so that not all buildings are central to their lot
-        offsetX = Random.Range(0, ((int)lotWidthUpdated) - buildingWidth);
-        offsetZ = Random.Range(0, ((int)lotLengthUpdated) - buildingLength);
+        offsetX = Random.Range(0, ((int)lotWidthUpdated + 1) - buildingWidth);
+        offsetZ = Random.Range(0, ((int)lotLengthUpdated + 1) - buildingLength);
 
         posXWidth = buildingLength;
         negXWidth = buildingLength;
@@ -343,31 +354,31 @@ public class BuildingLot : MonoBehaviour
 
     public int GetMaxBuildingHeight()
     {
-        return maxBuildingHeight; // height of main buulding section
+        return maxBuildingHeight; // height of main building section
     }
 
 
-    public int GetPosXOffset()
+    public int GetOffsetX()
     {
         return offsetX;
     }
 
 
-    public void SetPosXOffset(int _offset)
+    public void SetOffsetX(int _value)
     {
-        offsetX = _offset;
+        offsetX = _value;
     }
 
 
-    public int GetPosZOffset()
+    public int GetOffsetZ()
     {
         return offsetZ;
     }
 
 
-    public void SetPosZOffset(int _offset)
+    public void SetOffsetZ(int _value)
     {
-        offsetZ = _offset;
+        offsetZ = _value;
     }
 
 

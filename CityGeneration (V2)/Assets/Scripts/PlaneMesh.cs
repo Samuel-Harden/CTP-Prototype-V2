@@ -16,7 +16,7 @@ public class PlaneMesh : MonoBehaviour
 
         float length = _length;
         float width = _width;
-        int resX = 2; // 2 minimum
+        int resX = 2;
         int resZ = 2;
 
         #region Vertices		

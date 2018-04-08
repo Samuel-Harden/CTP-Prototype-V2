@@ -13,35 +13,19 @@ public class Panel
     private bool panelStatus;
 
 
-    public Panel(int _row, int _col, bool _status, Vector3 _pos, Vector3 _rot)
+    public Panel(int _row, int _col, Vector3 _pos, Vector3 _rot)
     {
         row = _row;
         col = _col;
-
-        panelStatus = _status;
 
         position = _pos;
         rotation = _rot;
     }
 
 
-    // Setters
-    public void SetStatus(bool _status)
-    {
-        panelStatus = _status;
-    }
-
-
     public void SetPosition(Vector3 _pos)
     {
         position = _pos;
-    }
-
-
-    // Getters
-    public bool PanelStatus()
-    {
-        return panelStatus;
     }
 
 

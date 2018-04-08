@@ -78,12 +78,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CarEngine.cs" />
     <Compile Include="Assets\Scripts\AITrafficController.cs" />
     <Compile Include="Assets\Scripts\AIVehicle.cs" />
     <Compile Include="Assets\Scripts\AIWaypoints.cs" />
     <Compile Include="Assets\Scripts\BuildingCreationKit.cs" />
     <Compile Include="Assets\Scripts\BuildingLot.cs" />
+    <Compile Include="Assets\Scripts\CarEngine.cs" />
     <Compile Include="Assets\Scripts\CityGen.cs" />
     <Compile Include="Assets\Scripts\Intersection.cs" />
     <Compile Include="Assets\Scripts\MeshCombine.cs" />

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/CityGen.unity
+- path: Assets/Scenes/CityGen.unity
   isLoaded: 1
   isActive: 1
