@@ -13,6 +13,7 @@ public class AITrafficController : MonoBehaviour
     private List<RoadSection> roadNetworkList;
 
     private List<AIVehicle> vehicles;
+    private List<RoadSection> index9Sections;
 
 
     private int cityWidth;
@@ -21,8 +22,6 @@ public class AITrafficController : MonoBehaviour
 	public void Initialise(RoadSection[,] _roadNetwork, List<RoadSection> _roadNetworkList,
         int _cityWidth, int _cityLength)
     {
-        vehicles = new List<AIVehicle>();
-
         roadNetworkList = _roadNetworkList;
 
         cityWidth = _cityWidth;
@@ -36,8 +35,18 @@ public class AITrafficController : MonoBehaviour
     }
 
 
+    private void Awake()
+    {
+        vehicles = new List<AIVehicle>();
+
+        index9Sections = new List<RoadSection>();
+    }
+
+
     private void GenerateVehicles()
     {
+        ClearVehicles();
+
         for (int i = 0; i < noVehicles; i++)
         {
             var vehicle = Instantiate(vehiclePrefabs[Random.Range(0, vehiclePrefabs.Count)],
@@ -54,6 +63,17 @@ public class AITrafficController : MonoBehaviour
     }
 
 
+    private void ClearVehicles()
+    {
+        foreach (AIVehicle vehicle in vehicles)
+        {
+            Destroy(vehicle.gameObject);
+        }
+
+        vehicles.Clear();
+    }
+
+
     private void SetupPositions()
     {
         // Can use indexs to identify what road section we are on,
@@ -61,8 +81,8 @@ public class AITrafficController : MonoBehaviour
         //ie Index 9 (Spawn them facing up). So we know we want a waypoint
         // with a -x value (left side), and we know the facing off all vehicles! :)
 
-        List<RoadSection> index9Sections = new List<RoadSection>();
-        
+        index9Sections.Clear();
+
         // Create List of all index 9 sections
         for (int i = 0; i < roadNetworkList.Count; i++)
         {

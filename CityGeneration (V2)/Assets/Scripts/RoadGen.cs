@@ -14,6 +14,7 @@ public class RoadGen : MonoBehaviour
     private int cityLength;
     private int roadSize;
     private float roadHeight;
+    private bool roadsValid;
 
     private RoadSection[,] roadMap;
     private List<RoadSection> roadMapList;
@@ -38,8 +39,6 @@ public class RoadGen : MonoBehaviour
         cityWidth  = _cityWidth;
         cityLength = _cityLength;
 
-        roadMapList = new List<RoadSection>();
-
         GenerateRoads(_buildingLots);
 
         roadHeight = roadMapList[0].GetComponent<MeshFilter>().mesh.bounds.extents.y;
@@ -48,8 +47,35 @@ public class RoadGen : MonoBehaviour
     }
 
 
+    public void ResetRoads()
+    {
+        foreach (RoadSection road in roadMapList)
+        {
+            Destroy(road.gameObject);
+        }
+
+        roadMapList.Clear();
+
+        roadsValid = false;
+    }
+
+
+    public bool RoadsValid()
+    {
+        return roadsValid;
+    }
+
+
+    private void Awake()
+    {
+        roadMapList = new List<RoadSection>();
+    }
+
+
     private void GenerateRoads(List<BuildingLot> _buildingLots)
     {
+        ResetRoads();
+
         roadMap = new RoadSection[cityLength + 1, cityWidth + 1];
 
         // Add each room pos to tile grid
@@ -85,6 +111,8 @@ public class RoadGen : MonoBehaviour
             if(section != null)
                 AssignType(section);
         }
+
+        roadsValid = true;
     }
 
 

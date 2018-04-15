@@ -285,7 +285,7 @@ public static class BuildingCreationKit
 
         //Debug.Log("NegX");
 
-        Debug.Log(_lot.transform.position);
+        //Debug.Log(_lot.transform.position);
 
         // set new height, width and length
         // Calculate size of mutation
@@ -294,20 +294,23 @@ public static class BuildingCreationKit
 
         newHeight = (int)Random.Range(newHeight, _lot.GetCurrentBuildingHeight());
 
+        if (newHeight <= 1)
+            return;
+
         _lot.SetCurrentBuildingHeight(newHeight);
 
         //Debug.Log("Height: " + newHeight);
 
         int newWidth = (int)Random.Range(1, _lot.GetOffsetX() + 1);
 
-        Debug.Log("Width: " + newWidth);
+        //Debug.Log("Width: " + newWidth);
 
         int newLength = (int)Random.Range(1, _lot.GetNegXWidth() + 1);
 
         if (newLength == 1)
             return;
 
-        Debug.Log("Length: " + newLength);
+        //Debug.Log("Length: " + newLength);
 
         // Generate panels!
         Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() - newWidth, 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
@@ -349,7 +352,7 @@ public static class BuildingCreationKit
 
         //Debug.Log("PosX");
 
-        Debug.Log(_lot.transform.position);
+        //Debug.Log(_lot.transform.position);
 
         // set new height, width and length
         // Calculate size of mutation
@@ -358,22 +361,25 @@ public static class BuildingCreationKit
 
         newHeight = (int)Random.Range(newHeight, _lot.GetCurrentBuildingHeight());
 
+        if (newHeight <= 1)
+            return;
+
         _lot.SetCurrentBuildingHeight(newHeight);
 
         //Debug.Log("Height: " + newHeight);
 
         int newWidth = (int)Random.Range(1, (_lot.GetLotWidth() - (_lot.GetOffsetX() + _lot.GetNegZWidth())));
 
-        Debug.Log("Width: " + newWidth);
+        //Debug.Log("Width: " + newWidth);
 
-        Debug.Log("maxWidth: " + (_lot.GetLotWidth() - (_lot.GetOffsetX() + _lot.GetNegZWidth())));
+        //Debug.Log("maxWidth: " + (_lot.GetLotWidth() - (_lot.GetOffsetX() + _lot.GetNegZWidth())));
 
         int newLength = (int)Random.Range(1, _lot.GetPosXWidth() + 1);
 
         if (newLength == 1)
             return;
 
-        Debug.Log("Length: " + newLength);
+        //Debug.Log("Length: " + newLength);
 
         // Generate panels!
         Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth(), 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
@@ -411,7 +417,7 @@ public static class BuildingCreationKit
     {
         List<Panel> addedPanels = new List<Panel>();
 
-        Debug.Log(_lot.transform.position);
+        //Debug.Log(_lot.transform.position);
 
         // set new height, width and length
         // Calculate size of mutation
@@ -420,17 +426,20 @@ public static class BuildingCreationKit
 
         newHeight = (int)Random.Range(newHeight, _lot.GetCurrentBuildingHeight());
 
+        if (newHeight <= 1)
+            return;
+
         _lot.SetCurrentBuildingHeight(newHeight);
 
         int newWidth = (int)Random.Range(1, (_lot.GetNegZWidth() + 1));
 
-        Debug.Log("Width: " + newWidth);
+        //Debug.Log("Width: " + newWidth);
 
-        Debug.Log("maxWidth: " + _lot.GetNegZWidth());
+        //Debug.Log("maxWidth: " + _lot.GetNegZWidth());
 
         int newLength = (int)Random.Range(1, _lot.GetOffsetZ() + 1);
 
-        Debug.Log("Length: " + newLength);
+        //Debug.Log("Length: " + newLength);
 
         if (newWidth == 1)
             return;
@@ -472,7 +481,7 @@ public static class BuildingCreationKit
     {
         List<Panel> addedPanels = new List<Panel>();
 
-        Debug.Log(_lot.transform.position);
+        //Debug.Log(_lot.transform.position);
 
         // set new height, width and length
         // Calculate size of mutation
@@ -481,17 +490,20 @@ public static class BuildingCreationKit
 
         newHeight = (int)Random.Range(newHeight, _lot.GetCurrentBuildingHeight());
 
+        if (newHeight <= 1)
+            return;
+
         _lot.SetCurrentBuildingHeight(newHeight);
 
         int newWidth = (int)Random.Range(1, (_lot.GetPosZWidth() + 1));
 
-        Debug.Log("Width: " + newWidth);
+        //Debug.Log("Width: " + newWidth);
 
-        Debug.Log("maxWidth: " + _lot.GetPosZWidth());
+        //Debug.Log("maxWidth: " + _lot.GetPosZWidth());
 
         int newLength = (int)Random.Range(1, _lot.GetLotLength() - (_lot.GetNegXWidth() + _lot.GetOffsetZ()) + 1);
 
-        Debug.Log("Length: " + newLength);
+        //Debug.Log("Length: " + newLength);
 
         if (newWidth == 1)
             return;

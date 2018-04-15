@@ -50,10 +50,6 @@ public class BuildingLot : MonoBehaviour
     private int posZWidth;
     private int negZWidth;
 
-    private Color myColor = Color.red;
-
-    [SerializeField] bool gizmosEnabled;
-
 
     public void Initialise(Vector3 _pos, float _lotWidth, float _lotLength, int _maxDepth,
         GameObject _lotPrefab, int _tileSize, List<BuildingLot> _buildingLots,
@@ -439,26 +435,5 @@ public class BuildingLot : MonoBehaviour
     public int Division()
     {
         return division;
-    }
-
-
-    private void OnDrawGizmos()
-    {
-        if (gizmosEnabled)
-        {
-            Gizmos.color = myColor;
-
-            // Bottom Left to Bottom Right
-            Gizmos.DrawLine(transform.position, new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z));
-
-            // Bottom Right to Top Right
-            Gizmos.DrawLine(new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z), new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z + lotLengthUpdated));
-
-            // Top Right to Top Left
-            Gizmos.DrawLine(new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z + lotLengthUpdated), new Vector3(transform.position.x, 0, transform.position.z + lotLengthUpdated));
-
-            // Top Left to Bottom Left
-            Gizmos.DrawLine(new Vector3(transform.position.x, 0, transform.position.z + lotLengthUpdated), transform.position);
-        }
     }
 }

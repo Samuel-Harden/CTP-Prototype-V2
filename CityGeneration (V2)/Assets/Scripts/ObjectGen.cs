@@ -26,26 +26,23 @@ public class ObjectGen : MonoBehaviour
 
     private int panelSize = 1;
 
+    private List<GameObject> paths;
+    private List<GameObject> buildings;
+
 
     public void Initialze(int _minBuildDepth, float _roadHeight)
     {
-        planeMesh = GetComponent<PlaneMesh>();
-
         minBuildDepth = _minBuildDepth;
 
         roadHeight = 0.07f;
     }
 
 
-    public void GenerateLots(List<BuildingLot> _lots)
-    {
-        GenerateBuildings(_lots);
-    }
-
-
     // loop through each side of each building creating each panel
-    private void GenerateBuildings(List<BuildingLot> _lots)
+    public void GenerateBuildings(List<BuildingLot> _lots)
     {
+        ClearList(buildings);
+
         foreach (BuildingLot lot in _lots)
         {
             // Build Something
@@ -90,6 +87,8 @@ public class ObjectGen : MonoBehaviour
                 buildingRoot.transform.position = newPos;
 
                 buildingRoot.transform.parent = buildingContainer.transform;
+
+                buildings.Add(buildingRoot);
             }
         }
     }
@@ -97,6 +96,8 @@ public class ObjectGen : MonoBehaviour
 
     public void GeneratePaths(List<BuildingLot> _lots)
     {
+        ClearList(paths);
+
         foreach (BuildingLot lot in _lots)
         {
             var path = planeMesh.GeneratePlane(planeMeshPrefab, lot.GetLotWidth(), lot.GetLotLength());
@@ -118,7 +119,29 @@ public class ObjectGen : MonoBehaviour
                 path.GetComponent<Renderer>().material = parkMat;
 
             path.transform.parent = pavementContainer.transform;
+
+            paths.Add(path);
         }
+    }
+
+    private void Awake()
+    {
+        paths = new List<GameObject>();
+
+        buildings = new List<GameObject>();
+
+        planeMesh = GetComponent<PlaneMesh>();
+    }
+
+
+    private void ClearList(List<GameObject> _list)
+    {
+        foreach (GameObject obj in _list)
+        {
+            Destroy(obj);
+        }
+
+        _list.Clear();
     }
 
 

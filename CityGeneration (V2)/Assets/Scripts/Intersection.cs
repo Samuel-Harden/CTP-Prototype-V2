@@ -7,11 +7,11 @@ public class Intersection : MonoBehaviour
     private float delayTime;
     private float sectionTime;
 
-    [SerializeField] float sectionTimeAlternate = 2.0f;
+    [SerializeField] float sectionTimeAlternate = 2.5f;
     [SerializeField] float sectionTimeAllowTraffic = 4.25f;
 
-    [SerializeField] float delayTimeAlternate = 1.0f;
-    [SerializeField] float delayTimeAllowTraffic = 1.5f;
+    [SerializeField] float delayTimeAlternate = 2.5f;
+    [SerializeField] float delayTimeAllowTraffic = 1.0f;
 
     private RoadSection roadSection;
 

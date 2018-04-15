@@ -17,7 +17,6 @@ public class CityGen : MonoBehaviour
     private int tileSize = 1;
 
     private List<Vector3> perlinPositions;
-    private List<int> population;
     private List<BuildingLot> buildingLots;
 
     private RoadGen roadGen;
@@ -25,25 +24,59 @@ public class CityGen : MonoBehaviour
     private AITrafficController trafficController;
 
 
-    private void Start()
+    private void Awake()
     {
-        perlinPositions = new List<Vector3>();
         buildingLots = new List<BuildingLot>();
 
         roadGen = GetComponent<RoadGen>();
         objectGen = GetComponent<ObjectGen>();
 
         trafficController = GetComponentInChildren<AITrafficController>();
+    }
 
+
+    public void GenerateAll()
+    {
         GeneratePositions();
 
         GenerateBuildingLots();
+
+        GenerateRoads();
+
+        GeneratePaths();
+
+        GenerateBuildings();
+
+        GenerateTraffic();
+    }
+
+
+    public void GenerateTraffic()
+    {
+        if (roadGen.RoadsValid()) // if there are roads, we can spawn traffic
+        trafficController.Initialise(roadGen.GetRoadNetwork(),
+            roadGen.GetRoadNetworkList(), cityWidth, cityLength);
+    }
+
+
+    public void RegenBuildings()
+    {
+        if (buildingLots.Count == 0)
+            return;
+
+        GenerateBuildingLots();
+
+        UpdateLotSize();
+
+        GenerateLotData();
+
+        objectGen.GenerateBuildings(buildingLots);
     }
 
 
     void GeneratePositions()
     {
-        population = new List<int>();
+        perlinPositions = new List<Vector3>();
 
         float seed = Random.Range(0, 100);
 
@@ -54,8 +87,6 @@ public class CityGen : MonoBehaviour
                 int result = (int)(Mathf.PerlinNoise(w / perlinNoise + seed,
                     l / perlinNoise + seed) * 100);
 
-                population.Add(result);
-
                 Vector3 pos = new Vector3(w, 0, l);
 
                 if(result > 50)
@@ -65,11 +96,13 @@ public class CityGen : MonoBehaviour
     }
 
 
-    void GenerateBuildingLots()
+    private void GenerateBuildingLots()
     {
         Vector3 pos = Vector3.zero;
         int nodeSizeX = cityWidth;
         int nodeSizeZ = cityLength;
+
+        ClearBuildingLots();
 
         var buildingLot = Instantiate(lotPrefab, pos, Quaternion.identity);
 
@@ -79,21 +112,41 @@ public class CityGen : MonoBehaviour
             lotPrefab, tileSize, buildingLots, perlinPositions, 0);
 
         ClearDividedLots();
+    }
 
+
+    private void ClearBuildingLots()
+    {
+        foreach (BuildingLot lot in buildingLots)
+        {
+            Destroy(lot.gameObject);
+        }
+
+        buildingLots.Clear();
+    }
+
+
+    private void GenerateRoads()
+    {
         roadGen.Initialise(buildingLots, cityWidth, cityLength, tileSize);
 
         UpdateLotSize();
+    }
 
+
+    private void GeneratePaths()
+    {
         objectGen.Initialze(minBuildDepth, roadGen.RoadHeight());
 
         objectGen.GeneratePaths(buildingLots);
+    }
 
+
+    private void GenerateBuildings()
+    {
         GenerateLotData();
 
-        objectGen.GenerateLots(buildingLots);
-
-        trafficController.Initialise(roadGen.GetRoadNetwork(),
-            roadGen.GetRoadNetworkList(), cityWidth, cityLength);
+        objectGen.GenerateBuildings(buildingLots);
     }
 
 
