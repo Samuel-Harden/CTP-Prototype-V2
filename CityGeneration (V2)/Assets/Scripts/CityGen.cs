@@ -13,11 +13,14 @@ public class CityGen : MonoBehaviour
 
     [SerializeField] GameObject lotPrefab;
     [SerializeField] GameObject lotContainer;
+    [SerializeField] GameObject baseLotContainer;
 
     private int tileSize = 1;
+    private int currentBuilding = -1;
 
     private List<Vector3> perlinPositions;
     private List<BuildingLot> buildingLots;
+    private List<GameObject> baseBuildingLots;
 
     private RoadGen roadGen;
     private ObjectGen objectGen;
@@ -27,6 +30,7 @@ public class CityGen : MonoBehaviour
     private void Awake()
     {
         buildingLots = new List<BuildingLot>();
+        baseBuildingLots = new List<GameObject>();
 
         roadGen = GetComponent<RoadGen>();
         objectGen = GetComponent<ObjectGen>();
@@ -39,15 +43,17 @@ public class CityGen : MonoBehaviour
     {
         GeneratePositions();
 
-        GenerateBuildingLots();
+        GenerateBuildingLots(buildingLots);
 
-        GenerateRoads();
+        GenerateRoads(buildingLots);
 
         GeneratePaths();
 
-        GenerateBuildings();
+        GenerateBaseBuildings();
 
-        GenerateTraffic();
+        GenerateBuildings(buildingLots);
+
+        currentBuilding = -1;
     }
 
 
@@ -64,17 +70,49 @@ public class CityGen : MonoBehaviour
         if (buildingLots.Count == 0)
             return;
 
-        GenerateBuildingLots();
+        GenerateBuildingLots(buildingLots);
 
-        UpdateLotSize();
+        UpdateLotSize(buildingLots);
 
-        GenerateLotData();
+        GenerateBuildings(buildingLots);
 
-        objectGen.GenerateBuildings(buildingLots);
+        currentBuilding = -1;
     }
 
 
-    void GeneratePositions()
+    public void SetCurrentBuilding(int _lotIndex)
+    {
+        currentBuilding = _lotIndex;
+    }
+
+
+    public void RegenBuilding()
+    {
+        if (currentBuilding == -1)
+            return;
+
+        List<BuildingLot> newLot = new List<BuildingLot>();
+
+        var lot = Instantiate(lotPrefab, Vector3.zero, Quaternion.identity);
+
+        lot.GetComponent<BuildingLot>().DeepCopyData(baseBuildingLots[currentBuilding].GetComponent<BuildingLot>());
+
+        Destroy(buildingLots[currentBuilding].gameObject);
+
+        newLot.Add(lot.GetComponent<BuildingLot>());
+
+        UpdateLotSize(newLot);
+
+        GenerateBuildings(newLot);
+
+        buildingLots.RemoveAt(currentBuilding);
+        buildingLots.Insert(currentBuilding, newLot[0]);
+
+        lot.transform.parent = lotContainer.transform;
+    }
+
+
+    private void GeneratePositions()
     {
         perlinPositions = new List<Vector3>();
 
@@ -96,41 +134,43 @@ public class CityGen : MonoBehaviour
     }
 
 
-    private void GenerateBuildingLots()
+    private void GenerateBuildingLots(List<BuildingLot> _lots)
     {
         Vector3 pos = Vector3.zero;
         int nodeSizeX = cityWidth;
         int nodeSizeZ = cityLength;
 
-        ClearBuildingLots();
+        ClearBuildingLots(_lots);
 
         var buildingLot = Instantiate(lotPrefab, pos, Quaternion.identity);
 
-        buildingLots.Add(buildingLot.GetComponent<BuildingLot>());
+        _lots.Add(buildingLot.GetComponent<BuildingLot>());
 
         buildingLot.GetComponent<BuildingLot>().Initialise(pos, nodeSizeX, nodeSizeZ, maxDepth,
             lotPrefab, tileSize, buildingLots, perlinPositions, 0);
 
         ClearDividedLots();
+
+        SetLotIDs();
     }
 
 
-    private void ClearBuildingLots()
+    private void ClearBuildingLots(List<BuildingLot> _lots)
     {
-        foreach (BuildingLot lot in buildingLots)
+        foreach (BuildingLot lot in _lots)
         {
             Destroy(lot.gameObject);
         }
 
-        buildingLots.Clear();
+        _lots.Clear();
     }
 
 
-    private void GenerateRoads()
+    private void GenerateRoads(List<BuildingLot> _lots)
     {
         roadGen.Initialise(buildingLots, cityWidth, cityLength, tileSize);
 
-        UpdateLotSize();
+        UpdateLotSize(_lots);
     }
 
 
@@ -142,26 +182,50 @@ public class CityGen : MonoBehaviour
     }
 
 
-    private void GenerateBuildings()
+    private void GenerateBuildings(List<BuildingLot> _lots)
     {
-        GenerateLotData();
+        GenerateLotData(_lots);
 
-        objectGen.GenerateBuildings(buildingLots);
+        objectGen.GenerateBuildings(_lots);
     }
 
 
-    private void UpdateLotSize()
+    private void GenerateBaseBuildings()
     {
+        foreach (GameObject lot in baseBuildingLots)
+        {
+            Destroy(lot.gameObject);
+        }
+
+        baseBuildingLots.Clear();
+
         foreach (BuildingLot lot in buildingLots)
+        {
+            // Create Backup
+            var backupLot = Instantiate(lot.gameObject, lot.transform.position, lot.transform.rotation);
+
+            baseBuildingLots.Add(backupLot);
+
+            backupLot.GetComponent<BuildingLot>().DeepCopyData(lot);
+
+            backupLot.transform.parent = baseLotContainer.transform;
+        }
+    }
+
+
+
+    private void UpdateLotSize(List<BuildingLot> _lots)
+    {
+        foreach (BuildingLot lot in _lots)
         {
             lot.RecalculateLotSize();
         }
     }
 
 
-    private void GenerateLotData()
+    private void GenerateLotData(List<BuildingLot> _lots)
     {
-        foreach (BuildingLot lot in buildingLots)
+        foreach (BuildingLot lot in _lots)
         {
             lot.CalculateBuildingData();
         }
@@ -179,6 +243,18 @@ public class CityGen : MonoBehaviour
             }
 
             buildingLots[i].transform.parent = lotContainer.transform;
+        }
+    }
+
+
+    private void SetLotIDs()
+    {
+        int index = 0;
+
+        foreach (BuildingLot lot in buildingLots)
+        {
+            lot.SetLotIndex(index);
+            index++;
         }
     }
 

@@ -41,7 +41,8 @@ public class ObjectGen : MonoBehaviour
     // loop through each side of each building creating each panel
     public void GenerateBuildings(List<BuildingLot> _lots)
     {
-        ClearList(buildings);
+        if (_lots.Count > 1) // only clear list if all buildings are being regenerated
+            ClearList(buildings);
 
         foreach (BuildingLot lot in _lots)
         {
@@ -82,13 +83,29 @@ public class ObjectGen : MonoBehaviour
                 // now all panels have been merged, we can apply a texture to the mesh
                 SetTexture(buildingRoot);
 
+                buildingRoot.AddComponent<MeshCollider>();
+
+                buildingRoot.GetComponent<MeshCollider>().convex = true;
+
                 newPos.y += roadHeight;
 
                 buildingRoot.transform.position = newPos;
 
-                buildingRoot.transform.parent = buildingContainer.transform;
+                buildingRoot.transform.parent = lot.transform;
 
-                buildings.Add(buildingRoot);
+                if (_lots.Count > 1)
+                    buildings.Add(buildingRoot);
+
+                else
+                {
+                    buildings.RemoveAt(lot.LotIndex());
+                    buildings.Insert(lot.LotIndex(), buildingRoot);
+
+                    newPos.x -= 0.5f;
+                    newPos.z -= 0.5f;
+
+                    buildingRoot.transform.position = newPos;
+                }
             }
         }
     }
@@ -123,6 +140,7 @@ public class ObjectGen : MonoBehaviour
             paths.Add(path);
         }
     }
+
 
     private void Awake()
     {

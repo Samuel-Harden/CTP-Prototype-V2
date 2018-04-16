@@ -85,6 +85,7 @@
     <Compile Include="Assets\Scripts\BuildingLot.cs" />
     <Compile Include="Assets\Scripts\CarEngine.cs" />
     <Compile Include="Assets\Scripts\CityGen.cs" />
+    <Compile Include="Assets\Scripts\InputControl.cs" />
     <Compile Include="Assets\Scripts\Intersection.cs" />
     <Compile Include="Assets\Scripts\MeshCombine.cs" />
     <Compile Include="Assets\Scripts\ObjectGen.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Assets\Scripts\PlaneMesh.cs" />
     <Compile Include="Assets\Scripts\RoadGen.cs" />
     <Compile Include="Assets\Scripts\RoadSection.cs" />
+    <Compile Include="Assets\Scripts\SelectableObject.cs" />
     <Compile Include="Assets\Scripts\TrafficLight.cs" />
     <Compile Include="Assets\Scripts\VehicleWheels.cs" />
   </ItemGroup>

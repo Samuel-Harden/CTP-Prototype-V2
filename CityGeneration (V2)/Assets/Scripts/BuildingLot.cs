@@ -11,7 +11,7 @@ public class BuildingLot : MonoBehaviour
 
     private bool divided;
 
-    private Vector3 boundsPos;
+    //private Vector3 boundsPos;
 
     private int noDivisions = 4;
     private int buildDepth = 2;
@@ -25,6 +25,8 @@ public class BuildingLot : MonoBehaviour
     private int division;
 
     private int panelSize = 1;
+
+    private int lotIndex;
 
     // the min size a building can be
     private int minBuildingSize = 2;
@@ -94,6 +96,12 @@ public class BuildingLot : MonoBehaviour
             // Get main building data first
             GenerateBuilding();
         }
+    }
+
+
+    public void SetSelectedBuilding()
+    {
+        GetComponentInParent<CityGen>().SetCurrentBuilding(lotIndex);
     }
 
 
@@ -432,8 +440,56 @@ public class BuildingLot : MonoBehaviour
     }
 
 
+    public int LotIndex()
+    {
+        return lotIndex;
+    }
+
+
+    public void SetLotIndex(int _index)
+    {
+        lotIndex = _index;
+    }
+
+
     public int Division()
     {
         return division;
+    }
+
+    // Deep copy values
+    public void DeepCopyData(BuildingLot _lot)
+    {
+        transform.position = _lot.transform.position;
+
+        lotWidth  = _lot.lotWidth;
+
+        lotLength = _lot.lotLength;
+
+        divided   = _lot.divided;
+
+        counter   = _lot.counter;
+
+        tileSize  = _lot.tileSize;
+
+        lotWidthUpdated  = _lot.lotWidthUpdated;
+
+        lotLengthUpdated = _lot.lotLengthUpdated;
+
+        division = _lot.division;
+
+        lotIndex = _lot.lotIndex;
+
+        offsetX  = _lot.offsetX;
+
+        offsetZ  = _lot.offsetZ;
+
+        buildingWidth  = _lot.buildingWidth;
+
+        buildingLength = _lot.buildingLength;
+
+        buildingHeight = _lot.buildingHeight;
+
+        maxBuildingHeight = _lot.maxBuildingHeight;
     }
 }
