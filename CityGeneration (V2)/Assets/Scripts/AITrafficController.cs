@@ -63,7 +63,7 @@ public class AITrafficController : MonoBehaviour
     }
 
 
-    private void ClearVehicles()
+    public void ClearVehicles()
     {
         foreach (AIVehicle vehicle in vehicles)
         {

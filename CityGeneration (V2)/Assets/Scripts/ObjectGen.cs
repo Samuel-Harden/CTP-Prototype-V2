@@ -98,8 +98,16 @@ public class ObjectGen : MonoBehaviour
 
                 else
                 {
-                    buildings.RemoveAt(lot.LotIndex());
-                    buildings.Insert(lot.LotIndex(), buildingRoot);
+                    // Remove the correct building based on Index
+                    for (int i = 0; i < buildings.Count; i++)
+                    {
+                        if (lot.LotIndex() == buildings[i].GetComponentInParent<BuildingLot>().LotIndex())
+                        {
+                            buildings[i] = null;
+                            buildings[i] = buildingRoot;
+                            break;
+                        }
+                    }
 
                     newPos.x -= 0.5f;
                     newPos.z -= 0.5f;

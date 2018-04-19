@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CityGen : MonoBehaviour
 {
-    [SerializeField] int cityWidth;
-    [SerializeField] int cityLength;
+    [SerializeField] private int cityWidth;
+    [SerializeField] private int cityLength;
     [SerializeField] int maxDepth;
     [SerializeField] float perlinNoise = 50;
     [SerializeField] bool showPositions;
@@ -39,8 +39,23 @@ public class CityGen : MonoBehaviour
     }
 
 
+    public void SetCitySize(float _size)
+    {
+        cityWidth = (int)_size;
+        cityLength = (int) _size;
+    }
+
+
+    public void SetPerlinNoise(float _noise)
+    {
+        perlinNoise = _noise;
+    }
+
+
     public void GenerateAll()
     {
+        trafficController.ClearVehicles();
+
         GeneratePositions();
 
         GenerateBuildingLots(buildingLots);
@@ -97,19 +112,19 @@ public class CityGen : MonoBehaviour
 
         lot.GetComponent<BuildingLot>().DeepCopyData(baseBuildingLots[currentBuilding].GetComponent<BuildingLot>());
 
-        Destroy(buildingLots[currentBuilding].gameObject);
-
         newLot.Add(lot.GetComponent<BuildingLot>());
 
         UpdateLotSize(newLot);
 
         GenerateBuildings(newLot);
 
+        Destroy(buildingLots[currentBuilding].gameObject);
+
         //buildingLots.RemoveAt(currentBuilding); // was wrong, trying to access a deleted entry
 
         buildingLots[currentBuilding] = null; // Null first as its already been deleted!
 
-        buildingLots.Insert(currentBuilding, newLot[0]);
+        buildingLots[currentBuilding] =  newLot[0];
 
         lot.transform.parent = lotContainer.transform;
     }
