@@ -105,7 +105,10 @@ public class CityGen : MonoBehaviour
 
         GenerateBuildings(newLot);
 
-        buildingLots.RemoveAt(currentBuilding);
+        //buildingLots.RemoveAt(currentBuilding); // was wrong, trying to access a deleted entry
+
+        buildingLots[currentBuilding] = null; // Null first as its already been deleted!
+
         buildingLots.Insert(currentBuilding, newLot[0]);
 
         lot.transform.parent = lotContainer.transform;
@@ -159,7 +162,8 @@ public class CityGen : MonoBehaviour
     {
         foreach (BuildingLot lot in _lots)
         {
-            Destroy(lot.gameObject);
+            if (lot != null)
+                Destroy(lot.gameObject);
         }
 
         _lots.Clear();
