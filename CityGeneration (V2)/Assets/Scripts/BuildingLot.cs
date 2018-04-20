@@ -74,6 +74,7 @@ public class BuildingLot : MonoBehaviour
         }
     }
 
+
     // This recalculates the lot size and factors in the roads
     public void RecalculateLotSize()
     {
@@ -102,6 +103,15 @@ public class BuildingLot : MonoBehaviour
     public void SetSelectedBuilding()
     {
         GetComponentInParent<CityGen>().SetCurrentBuilding(lotIndex);
+    }
+
+
+    public bool CheckSelectedBuilding()
+    {
+        if (lotIndex == GetComponentInParent<CityGen>().CurrentBuilding())
+            return true;
+
+        return false;
     }
 
 

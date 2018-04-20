@@ -95,9 +95,30 @@ public class CityGen : MonoBehaviour
     }
 
 
+    // Highlight Selected Lot 
     public void SetCurrentBuilding(int _lotIndex)
     {
+        if(currentBuilding != -1)
+            buildingLots[currentBuilding].GetComponentInChildren<SelectableObject>().outlineEnabled = false;
+
         currentBuilding = _lotIndex;
+
+        buildingLots[currentBuilding].GetComponentInChildren<SelectableObject>().outlineEnabled = true;
+    }
+
+
+    public void ResetCurrentBuilding()
+    {
+        if(currentBuilding != -1)
+            buildingLots[currentBuilding].GetComponentInChildren<SelectableObject>().outlineEnabled = false;
+
+        currentBuilding = -1;
+    }
+
+
+    public int CurrentBuilding()
+    {
+        return currentBuilding;
     }
 
 
@@ -127,6 +148,8 @@ public class CityGen : MonoBehaviour
         buildingLots[currentBuilding] =  newLot[0];
 
         lot.transform.parent = lotContainer.transform;
+
+        lot.GetComponentInChildren<SelectableObject>().outlineEnabled = true;
     }
 
 

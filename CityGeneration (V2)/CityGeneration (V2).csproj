@@ -78,6 +78,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\3rd Party\OutlineEffect\LinkedSet.cs" />
+    <Compile Include="Assets\3rd Party\OutlineEffect\Outline.cs" />
+    <Compile Include="Assets\3rd Party\OutlineEffect\OutlineEffect.cs" />
     <Compile Include="Assets\Scripts\AITrafficController.cs" />
     <Compile Include="Assets\Scripts\AIVehicle.cs" />
     <Compile Include="Assets\Scripts\AIWaypoints.cs" />
@@ -96,8 +99,11 @@
     <Compile Include="Assets\Scripts\SelectableObject.cs" />
     <Compile Include="Assets\Scripts\TrafficLight.cs" />
     <Compile Include="Assets\Scripts\VehicleWheels.cs" />
+    <Compile Include="Assets\Test.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\3rd Party\OutlineEffect\Resources\OutlineBufferShader.shader" />
+    <None Include="Assets\3rd Party\OutlineEffect\Resources\OutlineShader.shader" />
     <None Include="Assets\Materials\Shaders\NormalsShader.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
