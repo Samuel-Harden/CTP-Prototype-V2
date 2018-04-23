@@ -5,7 +5,7 @@ using UnityEngine;
 public class AITrafficController : MonoBehaviour
 {
     [SerializeField] List<GameObject> vehiclePrefabs;
-    [SerializeField] int noVehicles;
+    [SerializeField] private int noVehicles;
 
     [SerializeField] Transform vehicleContainer;
 
@@ -35,6 +35,12 @@ public class AITrafficController : MonoBehaviour
     }
 
 
+    public void SetVehicleCount(float _noVehicles)
+    {
+        noVehicles = (int)_noVehicles;
+    }
+
+
     private void Awake()
     {
         vehicles = new List<AIVehicle>();
@@ -60,6 +66,8 @@ public class AITrafficController : MonoBehaviour
         }
 
         SetupPositions();
+
+        ClearInactive();
     }
 
 
@@ -71,6 +79,19 @@ public class AITrafficController : MonoBehaviour
         }
 
         vehicles.Clear();
+    }
+
+
+    private void ClearInactive()
+    {
+        for (int i = vehicles.Count - 1; i >= 0; i--)
+        {
+            if (vehicles[i].gameObject.activeInHierarchy == false)
+            {
+                Destroy(vehicles[i].gameObject);
+                vehicles.RemoveAt(i);
+            }
+        }
     }
 
 
@@ -94,9 +115,11 @@ public class AITrafficController : MonoBehaviour
 
         foreach (AIVehicle vehicle in vehicles)
         {
-            int i = Random.Range(0, index9Sections.Count);
+            int i = Random.Range(0, index9Sections.Count - 1);
 
             List<Vector3> positions = new List<Vector3>();
+
+            Debug.Log(i);
 
             positions = index9Sections[i].GetWaypoints("posZ");
 
@@ -106,8 +129,13 @@ public class AITrafficController : MonoBehaviour
 
             vehicle.SetWaypoints(positions);
 
+            vehicle.gameObject.SetActive(true);
+
             //Stops the same section being used, (and spawning another vehicle on this one)
             index9Sections.RemoveAt(i);
+
+            if (index9Sections.Count == 0) // no more space for vehicles
+                return;
         }
     }
 

@@ -261,12 +261,12 @@ public static class BuildingCreationKit
         {
             for (int j = _lot.GetBuildingPanels().Count - 1; j >= 0; j--)
             {
-                // If panel is overlapping, discard, we dont need them, as they must be inside the mesh
+                // If panel is overlapping, discard them as they must be inside the mesh
                 if (_addedPanels[i].Position() == _lot.GetBuildingPanels()[j].Position())
                 {
                     _lot.GetBuildingPanels().RemoveAt(j);
                     _addedPanels.RemoveAt(i);
-                    continue;
+                    break;
                 }
             }
         }

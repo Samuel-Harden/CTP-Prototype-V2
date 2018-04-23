@@ -15,8 +15,12 @@ public class CityGen : MonoBehaviour
     [SerializeField] GameObject lotContainer;
     [SerializeField] GameObject baseLotContainer;
 
+    [SerializeField] GameObject camRot;
+    [SerializeField] GameObject camMount;
+
     private int tileSize = 1;
     private int currentBuilding = -1;
+    private int heightOffset = 0;
 
     private List<Vector3> perlinPositions;
     private List<BuildingLot> buildingLots;
@@ -52,6 +56,17 @@ public class CityGen : MonoBehaviour
     }
 
 
+    public void ExitApplication()
+    {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+
+        #else
+        Application.Quit();
+        #endif
+    }
+
+
     public void GenerateAll()
     {
         trafficController.ClearVehicles();
@@ -69,6 +84,17 @@ public class CityGen : MonoBehaviour
         GenerateBuildings(buildingLots);
 
         currentBuilding = -1;
+
+        // if city hasnt divided, recall the function!
+        if (buildingLots.Count <= 1)
+        {
+            Debug.Log("Regenerating City, too small!");
+            GenerateAll();
+        }
+
+        camRot.transform.position = new Vector3(cityWidth / 2, 0.0f, cityLength / 2);
+
+        camMount.transform.localPosition = new Vector3(0.0f, 20.0f, cityLength * 0.85f);
     }
 
 
@@ -84,6 +110,8 @@ public class CityGen : MonoBehaviour
     {
         if (buildingLots.Count == 0)
             return;
+
+        trafficController.ClearVehicles(); // Has to be Reset, causes issues for AIVehicle update
 
         GenerateBuildingLots(buildingLots);
 
@@ -122,6 +150,24 @@ public class CityGen : MonoBehaviour
     }
 
 
+    public int CityWidth()
+    {
+        return cityWidth;
+    }
+
+
+    public int CityLength()
+    {
+        return cityLength;
+    }
+
+
+    public void UpdateHeightOffset(float _offset)
+    {
+        heightOffset = (int)_offset;
+    }
+
+
     public void RegenBuilding()
     {
         if (currentBuilding == -1)
@@ -132,6 +178,8 @@ public class CityGen : MonoBehaviour
         var lot = Instantiate(lotPrefab, Vector3.zero, Quaternion.identity);
 
         lot.GetComponent<BuildingLot>().DeepCopyData(baseBuildingLots[currentBuilding].GetComponent<BuildingLot>());
+
+        lot.GetComponent<BuildingLot>().SetHeightOffset(heightOffset);
 
         newLot.Add(lot.GetComponent<BuildingLot>());
 
@@ -188,7 +236,7 @@ public class CityGen : MonoBehaviour
         _lots.Add(buildingLot.GetComponent<BuildingLot>());
 
         buildingLot.GetComponent<BuildingLot>().Initialise(pos, nodeSizeX, nodeSizeZ, maxDepth,
-            lotPrefab, tileSize, buildingLots, perlinPositions, 0);
+            lotPrefab, heightOffset, tileSize, buildingLots, perlinPositions, 0);
 
         ClearDividedLots();
 

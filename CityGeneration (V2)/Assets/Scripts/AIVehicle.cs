@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AIVehicle : MonoBehaviour
 {
+    [SerializeField] bool gizmosEnabled;
     [SerializeField] float updateDistance = 1.75f;
 
     [Space]
@@ -93,7 +94,7 @@ public class AIVehicle : MonoBehaviour
     }
 
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (initialised)
         {
@@ -226,19 +227,24 @@ public class AIVehicle : MonoBehaviour
     }
 
 
-    /*private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-
-        Quaternion rot = Quaternion.Euler(0.0f, wheelFL.steerAngle, 0.0f);
-
-        Vector3 direction = rot * (wheelFL.transform.forward / 4);
-
-        if (currentSensor != null)
+        if (gizmosEnabled)
         {
-            Gizmos.DrawWireCube(currentSensor.position + direction, new Vector3(0.1f, 0.1f, 0.1f));
+            Gizmos.color = Color.red;
 
-            Gizmos.DrawWireSphere(currentSensor.position, 0.05f);
+            Quaternion rot = Quaternion.Euler(0.0f, wheelFL.steerAngle, 0.0f);
+
+            Vector3 direction = rot * (wheelFL.transform.forward / 4);
+
+            if (currentSensor != null)
+            {
+                Gizmos.DrawWireSphere(currentSensor.position + direction, 0.05f);
+
+                Gizmos.DrawWireSphere(currentSensor.position, 0.05f);
+
+                Gizmos.DrawLine(currentSensor.position, currentSensor.position + direction);
+            }
         }
-    }*/
+    }
 }

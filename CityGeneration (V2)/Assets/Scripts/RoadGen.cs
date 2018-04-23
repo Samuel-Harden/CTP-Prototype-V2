@@ -19,7 +19,7 @@ public class RoadGen : MonoBehaviour
     private RoadSection[,] roadMap;
     private List<RoadSection> roadMapList;
 
-    // Road Section Lookup Tables for Mesh and Texture
+    // Road Section Lookup Tables for Road Mesh
     Dictionary<int, int> roadMeshs = new Dictionary<int, int>()
     {
         {  3, 0 }, {  5, 1 }, { 6,  2 }, {  7, 3 }, { 9,   4 }, { 10, 5 },

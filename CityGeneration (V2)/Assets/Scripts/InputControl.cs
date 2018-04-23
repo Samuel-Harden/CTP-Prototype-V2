@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class InputControl : MonoBehaviour
 {
+    [SerializeField] private Transform camMount;
     [SerializeField] private CityGen cityGen;
+
+    [SerializeField] private GameObject speedControlUI;
 
     [SerializeField] float lookSpeedH = 4f;
     [SerializeField] float lookSpeedV = 4f;
@@ -15,31 +18,115 @@ public class InputControl : MonoBehaviour
     [SerializeField] float moveSpeed = 8.0f;
     [SerializeField] float strafeSpeed = 4.0f;
 
+    [SerializeField] float camMaxDistance = 1.5f; // scaled by CitySize
+    [SerializeField] float minCamHeight = 1.0f;
+    [SerializeField] float maxCamHeight = 50.0f;
+
     private float yaw = 0f;
     private float pitch = 0f;
-         
-    void Update ()
+
+    private bool freeLook;
+
+    private Camera camera;
+
+
+    public void SwitchCamMode()
     {
-        if (Input.GetMouseButton(0))
+        if (freeLook)
         {
-            LeftClickInput();
+            freeLook = false;
+            speedControlUI.SetActive(true);
+            SetCamPos();
+            return;
         }
 
-        //Look around with Right Mouse
-        if (Input.GetMouseButton(1))
+        if (!freeLook)
         {
-            RightClickInput();
+            freeLook = true;
+            speedControlUI.SetActive(false);
+            camera.transform.parent = null;
+            return;
         }
-     
-        //drag camera around with Middle Mouse
-        if (Input.GetMouseButton(2))
+    }
+
+
+    private void Awake()
+    {
+        camera = GetComponent<Camera>();
+        freeLook = true;
+    }
+
+
+    private void Update ()
+    {
+        if (freeLook)
         {
-            MiddleClickInput();
+            if (Input.GetMouseButton(0))
+            {
+                LeftClickInput();
+            }
+
+            //Look around with Right Mouse
+            if (Input.GetMouseButton(1))
+            {
+                RightClickInput();
+            }
+
+            //drag camera around with Middle Mouse
+            if (Input.GetMouseButton(2))
+            {
+                MiddleClickInput();
+            }
+
+            MouseWheelInput();
+
+            KeyboardInputs();
+
+            LimitCamera();
         }
 
-        MouseWheelInput();
+        if (!freeLook)
+        {
+            camera.transform.LookAt(camMount.parent.transform);
 
-        KeyboardInputs();
+            if (Input.GetMouseButton(0))
+            {
+                LeftClickInput();
+            }
+        }
+    }
+
+
+    public void SetCamPos()
+    {
+        camera.transform.parent = camMount;
+        transform.localPosition = Vector3.zero;
+    }
+
+
+    private void LimitCamera()
+    {
+        Vector3 pos = transform.position;
+
+        if (pos.y > maxCamHeight)
+            pos.y = maxCamHeight;
+
+        if (pos.y < minCamHeight)
+            pos.y = minCamHeight;
+
+        if (pos.x > cityGen.CityWidth() * camMaxDistance)
+            pos.x = cityGen.CityWidth() * camMaxDistance;
+
+        if (pos.x < -cityGen.CityWidth() * camMaxDistance)
+            pos.x = -cityGen.CityWidth() * camMaxDistance;
+
+        if (pos.z > cityGen.CityLength() * camMaxDistance)
+            pos.z = cityGen.CityLength() * camMaxDistance;
+
+        if (pos.z < -cityGen.CityLength() * camMaxDistance)
+            pos.z = -cityGen.CityLength() * camMaxDistance;
+
+        transform.position = pos;
     }
 
 

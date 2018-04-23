@@ -10,6 +10,9 @@ public class RoadSection : MonoBehaviour
     [Space]
     [SerializeField] float wayPointOffset = 0.3f;
 
+    [Space]
+    [SerializeField] bool gizmosEnabled;
+
     private List<RoadSection> neighbours;
 
     private int index;
@@ -120,16 +123,19 @@ public class RoadSection : MonoBehaviour
     }
 
 
-    /*private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-
-        if(aiWaypoints.Count != 0)
+        if (gizmosEnabled)
         {
-            foreach (Vector3 pos in aiWaypoints)
+            Gizmos.color = Color.green;
+
+            if (aiWaypoints.Count != 0)
             {
-                Gizmos.DrawWireSphere(pos, 0.1f);
+                foreach (Vector3 pos in aiWaypoints)
+                {
+                    Gizmos.DrawWireSphere(pos, 0.1f);
+                }
             }
         }
-    }*/
+    }
 }

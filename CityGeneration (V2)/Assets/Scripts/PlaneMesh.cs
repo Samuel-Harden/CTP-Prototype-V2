@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// This Script has been modifed and adapted from
+// http://wiki.unity3d.com/index.php/ProceduralPrimitives
+// to fit the needs of this PCG Project
+
+
 public class PlaneMesh : MonoBehaviour
 {
     public GameObject GeneratePlane(GameObject _prefab, float _width, float _length)

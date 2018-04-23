@@ -96,10 +96,10 @@
     <Compile Include="Assets\Scripts\PlaneMesh.cs" />
     <Compile Include="Assets\Scripts\RoadGen.cs" />
     <Compile Include="Assets\Scripts\RoadSection.cs" />
+    <Compile Include="Assets\Scripts\Rotator.cs" />
     <Compile Include="Assets\Scripts\SelectableObject.cs" />
     <Compile Include="Assets\Scripts\TrafficLight.cs" />
     <Compile Include="Assets\Scripts\VehicleWheels.cs" />
-    <Compile Include="Assets\Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\3rd Party\OutlineEffect\Resources\OutlineBufferShader.shader" />

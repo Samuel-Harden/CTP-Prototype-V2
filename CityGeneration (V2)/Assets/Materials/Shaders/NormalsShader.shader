@@ -26,8 +26,9 @@
 	sampler2D _WallTex;
 	sampler2D _SlopeTex;
 
-	void surf(Input IN, inout SurfaceOutputStandard o) {
-		// Floor
+	void surf(Input IN, inout SurfaceOutputStandard o) 
+	{
+		// Roof
 		if (IN.worldNormal.y > 0.9)
 		{
 			o.Albedo = tex2D(_RoofTex, IN.uv_RoofTex).rgb;
@@ -44,7 +45,7 @@
 		{
 			o.Albedo = tex2D(_WallTex, IN.uv_WallTex).rgb;
 		}
-		//o.Emission = half3(1, 1, 1) * o.Albedo;
+
 		o.Metallic = 0.0;
 		o.Smoothness = 0.5;
 	}

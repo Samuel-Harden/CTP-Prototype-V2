@@ -6,6 +6,8 @@ public class BuildingLot : MonoBehaviour
 {
     [SerializeField] int divideCount = 1;
 
+    [SerializeField] bool gizmosEnabled;
+
     private float lotWidth;
     private float lotLength;
 
@@ -44,6 +46,7 @@ public class BuildingLot : MonoBehaviour
     private int buildingHeight;
 
     private int maxBuildingHeight;
+    private int heightOffset;
 
     // The Length of each face
     // needed for mutations
@@ -54,7 +57,7 @@ public class BuildingLot : MonoBehaviour
 
 
     public void Initialise(Vector3 _pos, float _lotWidth, float _lotLength, int _maxDepth,
-        GameObject _lotPrefab, int _tileSize, List<BuildingLot> _buildingLots,
+        GameObject _lotPrefab, int _heightOffset, int _tileSize, List<BuildingLot> _buildingLots,
         List<Vector3> _perlinPositions, int _division)
     {
         divided = false;
@@ -63,6 +66,7 @@ public class BuildingLot : MonoBehaviour
         tileSize = _tileSize;
 
         division = _division;
+        heightOffset = _heightOffset;
 
         if (_maxDepth > 0)
         {
@@ -72,6 +76,12 @@ public class BuildingLot : MonoBehaviour
                 Divide(_perlinPositions, _maxDepth, _lotPrefab, _buildingLots, _tileSize, _division);
             }
         }
+    }
+
+
+    public void SetHeightOffset(float _offset)
+    {
+        heightOffset = (int)_offset;
     }
 
 
@@ -161,7 +171,7 @@ public class BuildingLot : MonoBehaviour
         negZWidth = buildingWidth;
 
         // Set Height
-        buildingHeight = buildingLength + buildingWidth * 2;
+        buildingHeight = buildingLength + buildingWidth + (int)Random.Range(0, heightOffset) + (int)Random.Range(1, (buildingLength + buildingWidth));
         maxBuildingHeight = buildingHeight;
 
         BuildingCreationKit.GenerateBuilding(this);
@@ -284,7 +294,7 @@ public class BuildingLot : MonoBehaviour
         _buildingLots.Add(buildingLot.GetComponent<BuildingLot>());
 
         buildingLot.GetComponent<BuildingLot>().Initialise(_newPos, _lotSizeX,
-            _lotSizeZ, _maxDepth, _lotPrefab, _tileSize, _buildingLots, _perlinPositions, _division);
+            _lotSizeZ, _maxDepth, _lotPrefab, heightOffset, _tileSize, _buildingLots, _perlinPositions, _division);
     }
 
 
@@ -467,7 +477,8 @@ public class BuildingLot : MonoBehaviour
         return division;
     }
 
-    // Deep copy values
+
+    // Deep copy Data
     public void DeepCopyData(BuildingLot _lot)
     {
         transform.position = _lot.transform.position;
@@ -501,5 +512,27 @@ public class BuildingLot : MonoBehaviour
         buildingHeight = _lot.buildingHeight;
 
         maxBuildingHeight = _lot.maxBuildingHeight;
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        if (gizmosEnabled)
+        {
+            Debug.Log("DrawningGizmo");
+            Gizmos.color = Color.green;
+
+            // Bottom Left to Bottom Right
+            Gizmos.DrawLine(transform.position, new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z));
+
+            // Bottom Right to Top Right
+            Gizmos.DrawLine(new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z), new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z + lotLengthUpdated));
+
+            // Top Right to Top Left
+            Gizmos.DrawLine(new Vector3(transform.position.x + lotWidthUpdated, 0, transform.position.z + lotLengthUpdated), new Vector3(transform.position.x, 0, transform.position.z + lotLengthUpdated));
+
+            // Top Left to Bottom Left
+            Gizmos.DrawLine(new Vector3(transform.position.x, 0, transform.position.z + lotLengthUpdated), transform.position);
+        }
     }
 }
