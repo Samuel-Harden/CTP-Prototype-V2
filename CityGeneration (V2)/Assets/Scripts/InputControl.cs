@@ -22,7 +22,7 @@ public class InputControl : MonoBehaviour
     [SerializeField] float minCamHeight = 1.0f;
     [SerializeField] float maxCamHeight = 50.0f;
 
-    private float yaw = 0f;
+    private float yaw   = 0f;
     private float pitch = 0f;
 
     private bool freeLook;

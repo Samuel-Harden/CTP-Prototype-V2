@@ -50,11 +50,11 @@ public class AIVehicle : MonoBehaviour
 
     public void Initialise(AITrafficController _controller, int _carID)
     {
-        direction = "posZ";
+        direction  = "posZ";
 
         controller = _controller;
 
-        vehicleID = _carID;
+        vehicleID  = _carID;
 
         currentSensor = sensorCenter;
 
@@ -76,6 +76,7 @@ public class AIVehicle : MonoBehaviour
         waypoints = _waypoints;
 
         hasWaypoint = true;
+
         moving = true;
     }
 
@@ -193,8 +194,6 @@ public class AIVehicle : MonoBehaviour
         Quaternion rot = Quaternion.Euler(0.0f, wheelFL.steerAngle, 0.0f);
 
         Vector3 direction = rot * (wheelFL.transform.forward);
-
-        //Debug.DrawLine(currentSensor.position, currentSensor.position + direction);
 
         if (Physics.Raycast(currentSensor.position, direction, out hit, aiSightDistance))
         {

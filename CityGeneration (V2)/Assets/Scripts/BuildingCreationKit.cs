@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public static class BuildingCreationKit
 {
     private const int panelSize = 1;
@@ -11,37 +12,39 @@ public static class BuildingCreationKit
     {
         GenerateMain(_lot);
 
-        //Identify sides for mutations
         SetMutations(_lot);
-        // Mutate!!!
-        // remove duplicates!
     }
 
 
     private static void GenerateMain(BuildingLot _lot)
     {
         // PosX
-        Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetCurrentBuildingWidth(), 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
+        Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() +
+            _lot.GetCurrentBuildingWidth(), 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
 
-        GeneratePosXPanels(_lot, (int)_lot.GetCurrentBuildingLength(), pos, _lot.GetBuildingPanels()); //gold
+        GeneratePosXPanels(_lot, (int)_lot.GetCurrentBuildingLength(), pos, _lot.GetBuildingPanels());
 
         // PosZ
-        pos =  _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2, 0.0f, _lot.GetOffsetZ() + _lot.GetCurrentBuildingLength());
+        pos =  _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2, 0.0f,
+            _lot.GetOffsetZ() + _lot.GetCurrentBuildingLength());
 
         GeneratePosZPanels(_lot, (int)_lot.GetCurrentBuildingWidth(), pos, _lot.GetBuildingPanels()); 
 
         // NegX
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX(), 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX(), 0.0f, _lot.GetOffsetZ() +
+            (float)panelSize / 2);
 
         GenerateNegXPanels(_lot, (int)_lot.GetCurrentBuildingLength(), pos, _lot.GetBuildingPanels());
 
         // NegZ
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2, 0.0f, _lot.GetOffsetZ());
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2, 0.0f,
+            _lot.GetOffsetZ());
 
         GenerateNegZPanels(_lot, (int)_lot.GetCurrentBuildingWidth(), pos, _lot.GetBuildingPanels());
 
         // PosY
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2, _lot.GetCurrentBuildingHeight() - (float)panelSize / 2, _lot.GetOffsetZ() + (float)panelSize / 2);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2,
+            _lot.GetCurrentBuildingHeight() - (float)panelSize / 2, _lot.GetOffsetZ() + (float)panelSize / 2);
 
         GeneratePosYPanels(_lot, (int)_lot.GetCurrentBuildingWidth(), (int)_lot.GetCurrentBuildingLength(),
             pos, _lot.GetBuildingPanels());
@@ -49,7 +52,7 @@ public static class BuildingCreationKit
 
 
     // Generates Panels for each face of building
-    public static void GenerateNegXPanels(BuildingLot _lot, int _sectionWidth,
+    private static void GenerateNegXPanels(BuildingLot _lot, int _sectionWidth,
         Vector3 _startPos, List<Panel> _panels)
     {
         Vector3 pos = _startPos;
@@ -73,7 +76,7 @@ public static class BuildingCreationKit
     }
 
 
-    public static void GeneratePosXPanels(BuildingLot _lot, int _sectionWidth,
+    private static void GeneratePosXPanels(BuildingLot _lot, int _sectionWidth,
         Vector3 _startPos, List<Panel> _panels)
     {
         Vector3 pos = _startPos;
@@ -97,7 +100,7 @@ public static class BuildingCreationKit
     }
 
 
-    public static void GeneratePosZPanels(BuildingLot _lot, int _sectionWidth,
+    private static void GeneratePosZPanels(BuildingLot _lot, int _sectionWidth,
         Vector3 _startPos, List<Panel> _panels)
     {
         Vector3 pos = _startPos;
@@ -121,7 +124,7 @@ public static class BuildingCreationKit
     }
 
 
-    public static void GenerateNegZPanels(BuildingLot _lot, int _sectionWidth,
+    private static void GenerateNegZPanels(BuildingLot _lot, int _sectionWidth,
         Vector3 _startPos, List<Panel> _panels)
     {
         Vector3 pos = _startPos;
@@ -145,7 +148,7 @@ public static class BuildingCreationKit
     }
 
 
-    public static void GeneratePosYPanels(BuildingLot _lot, int _sectionWidth,
+    private static void GeneratePosYPanels(BuildingLot _lot, int _sectionWidth,
         int _sectionLength, Vector3 _startPos, List<Panel> _panels)
     {
         Vector3 pos = _startPos;
@@ -169,7 +172,7 @@ public static class BuildingCreationKit
     }
 
 
-    public static void SetMutations(BuildingLot _lot)
+    private static void SetMutations(BuildingLot _lot)
     {
         // Find out how many mutations this building can have
         // (max 1 for each size)
@@ -186,8 +189,6 @@ public static class BuildingCreationKit
         if (MutationPosZ(_lot))
             _lot.GetMutationList().Add(3); // PosZ
 
-        //Debug.Log("Building Max Mutations: " + _lot.GetMutationList().Count);
-
         //pass through how many possible mutations,
         // Randomly set no of mutations for building
         // randomly choose face to mutate, check if possible? if so apply change
@@ -200,10 +201,7 @@ public static class BuildingCreationKit
     {
         int maxMutations = 0;
 
-        //maxMutations = (int)Random.Range(0, _lot.GetMutationList().Count + 1);
-
-        if (_lot.GetMutationList().Count > 0) // JUST SET TO 1 FOR TESTING
-            maxMutations = 1;
+        maxMutations = (int)Random.Range(0, _lot.GetMutationList().Count + 1);
 
         while (_lot.GetMutationList().Count > 0)
         {
@@ -248,9 +246,6 @@ public static class BuildingCreationKit
             case 3:
                 GeneratePosZMutation(_lot);
                 break;
-            //default:
-                //Debug.Log("Hit Default: " + _direction);
-                //break;
         }
     }
 
@@ -283,10 +278,6 @@ public static class BuildingCreationKit
     {
         List<Panel> addedPanels = new List<Panel>();
 
-        //Debug.Log("NegX");
-
-        //Debug.Log(_lot.transform.position);
-
         // set new height, width and length
         // Calculate size of mutation
 
@@ -299,37 +290,36 @@ public static class BuildingCreationKit
 
         _lot.SetCurrentBuildingHeight(newHeight);
 
-        //Debug.Log("Height: " + newHeight);
-
         int newWidth = (int)Random.Range(1, _lot.GetOffsetX() + 1);
-
-        //Debug.Log("Width: " + newWidth);
 
         int newLength = (int)Random.Range(1, _lot.GetNegXWidth() + 1);
 
         if (newLength == 1)
             return;
 
-        //Debug.Log("Length: " + newLength);
-
         // Generate panels!
-        Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() - newWidth, 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
+        Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() - newWidth, 0.0f,
+            _lot.GetOffsetZ() + (float)panelSize / 2);
 
         GenerateNegXPanels(_lot, newLength, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX(), 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX(), 0.0f,
+            _lot.GetOffsetZ() + (float)panelSize / 2);
 
         GeneratePosXPanels(_lot, newLength, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() - newWidth + (float)panelSize / 2, 0.0f, _lot.GetOffsetZ());
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() - newWidth + (float)panelSize / 2,
+            0.0f, _lot.GetOffsetZ());
 
         GenerateNegZPanels(_lot, newWidth, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() - newWidth + (float)panelSize / 2, 0.0f, _lot.GetOffsetZ() + newLength);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() - newWidth + (float)panelSize / 2,
+            0.0f, _lot.GetOffsetZ() + newLength);
 
         GeneratePosZPanels(_lot, newWidth, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3((_lot.GetOffsetX() + (float)panelSize / 2) - newWidth, newHeight - (float)panelSize / 2, _lot.GetOffsetZ() + (float)panelSize / 2);
+        pos = _lot.transform.position + new Vector3((_lot.GetOffsetX() + (float)panelSize / 2) - newWidth,
+            newHeight - (float)panelSize / 2, _lot.GetOffsetZ() + (float)panelSize / 2);
 
         GeneratePosYPanels(_lot, newWidth, newLength, pos, addedPanels);
 
@@ -350,10 +340,6 @@ public static class BuildingCreationKit
     {
         List<Panel> addedPanels = new List<Panel>();
 
-        //Debug.Log("PosX");
-
-        //Debug.Log(_lot.transform.position);
-
         // set new height, width and length
         // Calculate size of mutation
 
@@ -366,39 +352,36 @@ public static class BuildingCreationKit
 
         _lot.SetCurrentBuildingHeight(newHeight);
 
-        //Debug.Log("Height: " + newHeight);
-
         int newWidth = (int)Random.Range(1, (_lot.GetLotWidth() - (_lot.GetOffsetX() + _lot.GetNegZWidth())));
-
-        //Debug.Log("Width: " + newWidth);
-
-        //Debug.Log("maxWidth: " + (_lot.GetLotWidth() - (_lot.GetOffsetX() + _lot.GetNegZWidth())));
 
         int newLength = (int)Random.Range(1, _lot.GetPosXWidth() + 1);
 
         if (newLength == 1)
             return;
 
-        //Debug.Log("Length: " + newLength);
-
         // Generate panels!
-        Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth(), 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
+        Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth(), 0.0f,
+            _lot.GetOffsetZ() + (float)panelSize / 2);
 
         GenerateNegXPanels(_lot, newLength, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth() + newWidth, 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth() + newWidth,
+            0.0f, _lot.GetOffsetZ() + (float)panelSize / 2);
 
         GeneratePosXPanels(_lot, newLength, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth() + (float)panelSize / 2, 0.0f, _lot.GetOffsetZ());
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth() +
+            (float)panelSize / 2, 0.0f, _lot.GetOffsetZ());
 
         GenerateNegZPanels(_lot, newWidth, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth() + (float)panelSize / 2, 0.0f, _lot.GetOffsetZ() + newLength);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth() +
+            (float)panelSize / 2, 0.0f, _lot.GetOffsetZ() + newLength);
 
         GeneratePosZPanels(_lot, newWidth, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth() + (float)panelSize / 2, newHeight - (float)panelSize / 2, _lot.GetOffsetZ() + (float)panelSize / 2);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + _lot.GetNegZWidth() +
+            (float)panelSize / 2, newHeight - (float)panelSize / 2, _lot.GetOffsetZ() + (float)panelSize / 2);
 
         GeneratePosYPanels(_lot, newWidth, newLength, pos, addedPanels);
 
@@ -417,8 +400,6 @@ public static class BuildingCreationKit
     {
         List<Panel> addedPanels = new List<Panel>();
 
-        //Debug.Log(_lot.transform.position);
-
         // set new height, width and length
         // Calculate size of mutation
 
@@ -433,35 +414,34 @@ public static class BuildingCreationKit
 
         int newWidth = (int)Random.Range(1, (_lot.GetNegZWidth() + 1));
 
-        //Debug.Log("Width: " + newWidth);
-
-        //Debug.Log("maxWidth: " + _lot.GetNegZWidth());
-
         int newLength = (int)Random.Range(1, _lot.GetOffsetZ() + 1);
-
-        //Debug.Log("Length: " + newLength);
 
         if (newWidth == 1)
             return;
 
         // Generate panels!
-        Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX(), 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2 - newLength);
+        Vector3 pos = _lot.transform.position + new Vector3(_lot.GetOffsetX(), 0.0f,
+            _lot.GetOffsetZ() + (float)panelSize / 2 - newLength);
 
         GenerateNegXPanels(_lot, newLength, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + newWidth, 0.0f, _lot.GetOffsetZ() + (float)panelSize / 2 - newLength);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + newWidth, 0.0f,
+            _lot.GetOffsetZ() + (float)panelSize / 2 - newLength);
 
         GeneratePosXPanels(_lot, newLength, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2, 0.0f, _lot.GetOffsetZ() - newLength);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2,
+            0.0f, _lot.GetOffsetZ() - newLength);
 
         GenerateNegZPanels(_lot, newWidth, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2, 0.0f,_lot.GetOffsetZ());
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2,
+            0.0f,_lot.GetOffsetZ());
 
         GeneratePosZPanels(_lot, newWidth, pos, addedPanels);
 
-        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2, newHeight - (float)panelSize / 2, _lot.GetOffsetZ() - newLength + (float)panelSize / 2);
+        pos = _lot.transform.position + new Vector3(_lot.GetOffsetX() + (float)panelSize / 2,
+            newHeight - (float)panelSize / 2, _lot.GetOffsetZ() - newLength + (float)panelSize / 2);
 
         GeneratePosYPanels(_lot, newWidth, newLength, pos, addedPanels);
 
@@ -481,8 +461,6 @@ public static class BuildingCreationKit
     {
         List<Panel> addedPanels = new List<Panel>();
 
-        //Debug.Log(_lot.transform.position);
-
         // set new height, width and length
         // Calculate size of mutation
 
@@ -497,13 +475,7 @@ public static class BuildingCreationKit
 
         int newWidth = (int)Random.Range(1, (_lot.GetPosZWidth() + 1));
 
-        //Debug.Log("Width: " + newWidth);
-
-        //Debug.Log("maxWidth: " + _lot.GetPosZWidth());
-
         int newLength = (int)Random.Range(1, _lot.GetLotLength() - (_lot.GetNegXWidth() + _lot.GetOffsetZ()) + 1);
-
-        //Debug.Log("Length: " + newLength);
 
         if (newWidth == 1)
             return;
@@ -548,7 +520,6 @@ public static class BuildingCreationKit
     {
         if (_lot.GetOffsetX() != 0)
         {
-            //Debug.Log("NegX: " + _lot.GetPosXOffset());
             return true;
         }
 
@@ -560,7 +531,6 @@ public static class BuildingCreationKit
     {
         if (_lot.GetOffsetX() + _lot.GetCurrentBuildingWidth() < _lot.GetLotWidth())
         {
-            //Debug.Log("PosX: " + ((_lot.GetLotWidth() - 1) - (_lot.GetPosXOffset() + _lot.GetCurrentBuildingWidth())));
             return true;
         }
 
@@ -572,7 +542,6 @@ public static class BuildingCreationKit
     {
         if (_lot.GetOffsetZ() != 0)
         {
-            //Debug.Log("NegZ: " + _lot.GetPosZOffset());
             return true;
         }
 
@@ -584,7 +553,6 @@ public static class BuildingCreationKit
     {
         if (_lot.GetOffsetZ() + _lot.GetCurrentBuildingLength() < _lot.GetLotLength())
         {
-            //Debug.Log("PosZ: " + ((_lot.GetLotLength() - 1) - (_lot.GetPosZOffset() + _lot.GetCurrentBuildingLength())));
             return true;
         }
 

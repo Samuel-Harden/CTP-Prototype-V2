@@ -39,7 +39,7 @@ public class Intersection : MonoBehaviour
 
         currentLight = 0;
 
-        SignalState signalState = SignalState.Alternate;
+        signalState = SignalState.Alternate;
 
         delayTime = delayTimeAlternate;
         sectionTime = sectionTimeAlternate;

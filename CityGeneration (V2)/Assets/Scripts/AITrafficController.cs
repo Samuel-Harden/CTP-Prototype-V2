@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class AITrafficController : MonoBehaviour
 {
     [SerializeField] List<GameObject> vehiclePrefabs;
@@ -15,16 +16,16 @@ public class AITrafficController : MonoBehaviour
     private List<AIVehicle> vehicles;
     private List<RoadSection> index9Sections;
 
-
     private int cityWidth;
     private int cityLength;
+
 
 	public void Initialise(RoadSection[,] _roadNetwork, List<RoadSection> _roadNetworkList,
         int _cityWidth, int _cityLength)
     {
         roadNetworkList = _roadNetworkList;
 
-        cityWidth = _cityWidth;
+        cityWidth  = _cityWidth;
         cityLength = _cityLength;
 
         roadNetwork = new RoadSection[cityLength, cityWidth];
@@ -46,97 +47,6 @@ public class AITrafficController : MonoBehaviour
         vehicles = new List<AIVehicle>();
 
         index9Sections = new List<RoadSection>();
-    }
-
-
-    private void GenerateVehicles()
-    {
-        ClearVehicles();
-
-        for (int i = 0; i < noVehicles; i++)
-        {
-            var vehicle = Instantiate(vehiclePrefabs[Random.Range(0, vehiclePrefabs.Count)],
-                Vector3.zero, Quaternion.identity);
-
-            vehicle.GetComponent<AIVehicle>().Initialise(this, i);
-
-            vehicles.Add(vehicle.GetComponent<AIVehicle>());
-
-            vehicle.transform.parent = vehicleContainer.transform;
-        }
-
-        SetupPositions();
-
-        ClearInactive();
-    }
-
-
-    public void ClearVehicles()
-    {
-        foreach (AIVehicle vehicle in vehicles)
-        {
-            Destroy(vehicle.gameObject);
-        }
-
-        vehicles.Clear();
-    }
-
-
-    private void ClearInactive()
-    {
-        for (int i = vehicles.Count - 1; i >= 0; i--)
-        {
-            if (vehicles[i].gameObject.activeInHierarchy == false)
-            {
-                Destroy(vehicles[i].gameObject);
-                vehicles.RemoveAt(i);
-            }
-        }
-    }
-
-
-    private void SetupPositions()
-    {
-        // Can use indexs to identify what road section we are on,
-        // Ideally only use a specific tile type to spawn at the start,
-        //ie Index 9 (Spawn them facing up). So we know we want a waypoint
-        // with a -x value (left side), and we know the facing off all vehicles! :)
-
-        index9Sections.Clear();
-
-        // Create List of all index 9 sections
-        for (int i = 0; i < roadNetworkList.Count; i++)
-        {
-            if(roadNetworkList[i].Index() == 9)
-            {
-                index9Sections.Add(roadNetworkList[i]);
-            }
-        }
-
-        foreach (AIVehicle vehicle in vehicles)
-        {
-            int i = Random.Range(0, index9Sections.Count - 1);
-
-            List<Vector3> positions = new List<Vector3>();
-
-            Debug.Log(i);
-
-            positions = index9Sections[i].GetWaypoints("posZ");
-
-            vehicle.transform.position = new Vector3(positions[0].x, 0.25f, positions[0].z);
-
-            vehicle.SetCurrentSection(index9Sections[i].Row(), index9Sections[i].Col());
-
-            vehicle.SetWaypoints(positions);
-
-            vehicle.gameObject.SetActive(true);
-
-            //Stops the same section being used, (and spawning another vehicle on this one)
-            index9Sections.RemoveAt(i);
-
-            if (index9Sections.Count == 0) // no more space for vehicles
-                return;
-        }
     }
 
 
@@ -169,6 +79,95 @@ public class AITrafficController : MonoBehaviour
                 Debug.Log("Error, incorrect direction");
                 newWaypoints.Add(Vector3.zero);
                 return newWaypoints;
+        }
+    }
+
+
+    public void ClearVehicles()
+    {
+        foreach (AIVehicle vehicle in vehicles)
+        {
+            Destroy(vehicle.gameObject);
+        }
+
+        vehicles.Clear();
+    }
+
+
+    private void ClearInactive()
+    {
+        for (int i = vehicles.Count - 1; i >= 0; i--)
+        {
+            if (vehicles[i].gameObject.activeInHierarchy == false)
+            {
+                Destroy(vehicles[i].gameObject);
+                vehicles.RemoveAt(i);
+            }
+        }
+    }
+
+
+    private void GenerateVehicles()
+    {
+        ClearVehicles();
+
+        for (int i = 0; i < noVehicles; i++)
+        {
+            var vehicle = Instantiate(vehiclePrefabs[Random.Range(0, vehiclePrefabs.Count)],
+                Vector3.zero, Quaternion.identity);
+
+            vehicle.GetComponent<AIVehicle>().Initialise(this, i);
+
+            vehicles.Add(vehicle.GetComponent<AIVehicle>());
+
+            vehicle.transform.parent = vehicleContainer.transform;
+        }
+
+        SetupPositions();
+
+        ClearInactive();
+    }
+
+
+    private void SetupPositions()
+    {
+        // Can use indexs to identify what road section we are on,
+        // Ideally only use a specific tile type to spawn at the start,
+        //ie Index 9 (Spawn them facing up). So we know we want a waypoint
+        // with a -x value (left side), and we know the facing off all vehicles! :)
+
+        index9Sections.Clear();
+
+        // Create List of all index 9 sections
+        for (int i = 0; i < roadNetworkList.Count; i++)
+        {
+            if(roadNetworkList[i].Index() == 9)
+            {
+                index9Sections.Add(roadNetworkList[i]);
+            }
+        }
+
+        foreach (AIVehicle vehicle in vehicles)
+        {
+            int i = Random.Range(0, index9Sections.Count - 1);
+
+            List<Vector3> positions = new List<Vector3>();
+
+            positions = index9Sections[i].GetWaypoints("posZ");
+
+            vehicle.transform.position = new Vector3(positions[0].x, 0.25f, positions[0].z);
+
+            vehicle.SetCurrentSection(index9Sections[i].Row(), index9Sections[i].Col());
+
+            vehicle.SetWaypoints(positions);
+
+            vehicle.gameObject.SetActive(true);
+
+            //Stops the same section being used, (and spawning another vehicle on this one)
+            index9Sections.RemoveAt(i);
+
+            if (index9Sections.Count == 0) // no more space for vehicles
+                return;
         }
     }
 
@@ -207,7 +206,6 @@ public class AITrafficController : MonoBehaviour
                     sectionFound = true;
                 }
             }
-            // Update Direction
 
             return positions;
         }
@@ -220,7 +218,8 @@ public class AITrafficController : MonoBehaviour
     }
 
 
-    private string UpdateDirection(string _direction, int _currentRow, int _currentCol, int _newRow, int _newCol)
+    private string UpdateDirection(string _direction, int _currentRow,
+        int _currentCol, int _newRow, int _newCol)
     {
         // If we are moving right
         if (_direction == "posX")

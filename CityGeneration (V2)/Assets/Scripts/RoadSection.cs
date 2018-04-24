@@ -31,18 +31,26 @@ public class RoadSection : MonoBehaviour
     {
         if(index == 9)
         {
-            aiWaypoints.Add(new Vector3(transform.position.x - wayPointOffset, 0.25f, transform.position.z - 0.5f));
-            aiWaypoints.Add(new Vector3(transform.position.x + wayPointOffset, 0.25f, transform.position.z - 0.5f));
-            aiWaypoints.Add(new Vector3(transform.position.x - wayPointOffset, 0.25f, transform.position.z + 0.5f));
-            aiWaypoints.Add(new Vector3(transform.position.x + wayPointOffset, 0.25f, transform.position.z + 0.5f));
+            aiWaypoints.Add(new Vector3(transform.position.x - wayPointOffset, 0.25f,
+                transform.position.z - 0.5f));
+            aiWaypoints.Add(new Vector3(transform.position.x + wayPointOffset, 0.25f,
+                transform.position.z - 0.5f));
+            aiWaypoints.Add(new Vector3(transform.position.x - wayPointOffset, 0.25f,
+                transform.position.z + 0.5f));
+            aiWaypoints.Add(new Vector3(transform.position.x + wayPointOffset, 0.25f,
+                transform.position.z + 0.5f));
         }
 
         else
         {
-            aiWaypoints.Add(new Vector3(transform.position.x - 0.5f, 0.25f, transform.position.z - wayPointOffset));
-            aiWaypoints.Add(new Vector3(transform.position.x + 0.5f, 0.25f, transform.position.z - wayPointOffset));
-            aiWaypoints.Add(new Vector3(transform.position.x - 0.5f, 0.25f, transform.position.z + wayPointOffset));
-            aiWaypoints.Add(new Vector3(transform.position.x + 0.5f, 0.25f, transform.position.z + wayPointOffset));
+            aiWaypoints.Add(new Vector3(transform.position.x - 0.5f, 0.25f,
+                transform.position.z - wayPointOffset));
+            aiWaypoints.Add(new Vector3(transform.position.x + 0.5f, 0.25f,
+                transform.position.z - wayPointOffset));
+            aiWaypoints.Add(new Vector3(transform.position.x - 0.5f, 0.25f,
+                transform.position.z + wayPointOffset));
+            aiWaypoints.Add(new Vector3(transform.position.x + 0.5f, 0.25f,
+                transform.position.z + wayPointOffset));
         }
     }
 
@@ -79,10 +87,9 @@ public class RoadSection : MonoBehaviour
             return positions;
         }
 
-        //if (_direction == "negZ")
+        // if we are here we must be facing NegZ
         positions.Add(aiWaypoints[3]);
         positions.Add(aiWaypoints[1]);
-
         return positions;
     }
 

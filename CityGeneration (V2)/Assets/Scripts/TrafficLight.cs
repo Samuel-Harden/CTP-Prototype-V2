@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class TrafficLight : MonoBehaviour
 {
     [SerializeField] Material redStd;
@@ -13,11 +14,14 @@ public class TrafficLight : MonoBehaviour
     private BoxCollider coll;
     private Vector3 resetPos;
     private MeshRenderer rend;
+
     private bool trafficWaiting;
+
 
     public void Initialise()
     {
         coll = GetComponentInChildren<BoxCollider>();
+
         resetPos = coll.transform.position;
 
         rend = GetComponent<MeshRenderer>();
@@ -42,7 +46,8 @@ public class TrafficLight : MonoBehaviour
         if (_active)
         {
             //guna enable collider and set light
-            coll.transform.position = new Vector3(coll.transform.position.x, 2.0f, coll.transform.position.z);
+            coll.transform.position = new Vector3(coll.transform.position.x, 2.0f,
+                coll.transform.position.z);
 
             Material[] matArray = rend.materials;
 

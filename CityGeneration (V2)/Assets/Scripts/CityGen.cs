@@ -33,10 +33,10 @@ public class CityGen : MonoBehaviour
 
     private void Awake()
     {
-        buildingLots = new List<BuildingLot>();
+        buildingLots     = new List<BuildingLot>();
         baseBuildingLots = new List<GameObject>();
 
-        roadGen = GetComponent<RoadGen>();
+        roadGen   = GetComponent<RoadGen>();
         objectGen = GetComponent<ObjectGen>();
 
         trafficController = GetComponentInChildren<AITrafficController>();
@@ -45,7 +45,7 @@ public class CityGen : MonoBehaviour
 
     public void SetCitySize(float _size)
     {
-        cityWidth = (int)_size;
+        cityWidth  = (int) _size;
         cityLength = (int) _size;
     }
 
@@ -88,7 +88,6 @@ public class CityGen : MonoBehaviour
         // if city hasnt divided, recall the function!
         if (buildingLots.Count <= 1)
         {
-            Debug.Log("Regenerating City, too small!");
             GenerateAll();
         }
 
@@ -111,7 +110,7 @@ public class CityGen : MonoBehaviour
         if (buildingLots.Count == 0)
             return;
 
-        trafficController.ClearVehicles(); // Has to be Reset, causes issues for AIVehicle update
+        trafficController.ClearVehicles(); // Has to be Reset, Regen buildings causes issues for AIVehicle update
 
         GenerateBuildingLots(buildingLots);
 
@@ -188,8 +187,6 @@ public class CityGen : MonoBehaviour
         GenerateBuildings(newLot);
 
         Destroy(buildingLots[currentBuilding].gameObject);
-
-        //buildingLots.RemoveAt(currentBuilding); // was wrong, trying to access a deleted entry
 
         buildingLots[currentBuilding] = null; // Null first as its already been deleted!
 

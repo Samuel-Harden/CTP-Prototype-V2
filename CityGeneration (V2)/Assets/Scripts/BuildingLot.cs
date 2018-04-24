@@ -13,10 +13,9 @@ public class BuildingLot : MonoBehaviour
 
     private bool divided;
 
-    //private Vector3 boundsPos;
-
     private int noDivisions = 4;
     private int buildDepth = 2;
+    private int panelSize = 1;
     private int counter;
 
     private int tileSize;
@@ -25,9 +24,6 @@ public class BuildingLot : MonoBehaviour
     private float lotLengthUpdated;
 
     private int division;
-
-    private int panelSize = 1;
-
     private int lotIndex;
 
     // the min size a building can be
@@ -96,7 +92,7 @@ public class BuildingLot : MonoBehaviour
         transform.position = updatedPos;
 
         lotLengthUpdated = lotLength - tileSize;
-        lotWidthUpdated = lotWidth - tileSize;
+        lotWidthUpdated  = lotWidth - tileSize;
     }
 
 
@@ -127,10 +123,6 @@ public class BuildingLot : MonoBehaviour
 
     private void GenerateBuilding()
     {
-        // Possibly add a rest here, then you could just call this to regen a building
-
-        // ALL THIS BELOW COULD AND SHOULD GO INTO THE BUILDING CREATION KIT!!!
-
         // add offset for paths
         Vector3 pos = transform.position;
         pos.x += (float)panelSize / 2;
@@ -171,7 +163,8 @@ public class BuildingLot : MonoBehaviour
         negZWidth = buildingWidth;
 
         // Set Height
-        buildingHeight = buildingLength + buildingWidth + (int)Random.Range(0, heightOffset) + (int)Random.Range(1, (buildingLength + buildingWidth));
+        buildingHeight = buildingLength + buildingWidth + (int)Random.Range(0, heightOffset) +
+            (int)Random.Range(1, (buildingLength + buildingWidth));
         maxBuildingHeight = buildingHeight;
 
         BuildingCreationKit.GenerateBuilding(this);
@@ -294,7 +287,8 @@ public class BuildingLot : MonoBehaviour
         _buildingLots.Add(buildingLot.GetComponent<BuildingLot>());
 
         buildingLot.GetComponent<BuildingLot>().Initialise(_newPos, _lotSizeX,
-            _lotSizeZ, _maxDepth, _lotPrefab, heightOffset, _tileSize, _buildingLots, _perlinPositions, _division);
+            _lotSizeZ, _maxDepth, _lotPrefab, heightOffset, _tileSize,
+                _buildingLots, _perlinPositions, _division);
     }
 
 
